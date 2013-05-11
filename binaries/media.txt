@@ -1,0 +1,2 @@
+media/ is a copy of Ogre 1.8's Samples/Media/ for easier distribution.
+For more information, see https://bitbucket.org/sinbad/ogre/src/cf06d4ed07933c23985037182937139f56f15015/Samples/Media/?at=v1-8

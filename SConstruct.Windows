@@ -1,0 +1,36 @@
+# -*- Mode: python -*-
+
+# for reference. you will likely prefer to use the MSVC solution instead.
+
+import os, platform
+
+( system, node, release, version, machine, processor ) = platform.uname()
+
+assert( system == 'Windows' )
+
+SDL2_SRC=r'..\SDL'
+OGRE_SRC=r'..\ogre'
+LIBZMQ_SRC=r'..\libzmq'
+CZMQ_SRC=r'..\czmq'
+
+env = Environment( ENV = os.environ )
+env.Append( CXXFLAGS = [ '/EHsc' ] ) # Enable Exception Handling - http://msdn.microsoft.com/en-us/library/1deeycx5.aspx
+env.Append( CXXFLAGS = [ '/MDd' ] ) # Multithreaded Debug DLL runtime
+env.Append( CXXFLAGS = [ '/DEBUG' ] ) # Produce Debugging Information
+env.Append( CPPPATH = [ os.path.join( SDL2_SRC, 'include' ) ] )
+env.Append( CPPPATH = [ os.path.join( SDL2_SRC, r'src\video' ) ] )
+env.Append( CPPPATH = [ os.path.join( SDL2_SRC, r'src\video\windows' ) ] )
+env.Append( CPPPATH = [ os.path.join( OGRE_SRC, r'include' ) ] )
+env.Append( CPPPATH = [ os.path.join( OGRE_SRC, r'OgreMain\include' ) ] )
+env.Append( CPPPATH = [ os.path.join( LIBZMQ_SRC, 'include' ) ] )
+env.Append( CPPPATH = [ os.path.join( CZMQ_SRC, 'include' ) ] )
+env.Append( LIBPATH = [ os.path.join( OGRE_SRC, r'lib\Debug' ) ] )
+env.Append( LIBS = [ 'OgreMain_d' ] )
+env.Append( LIBPATH = [ os.path.join( SDL2_SRC, r'VisualC\SDL\Win32\Debug' ) ] )
+env.Append( LIBS = [ 'SDL' ] )
+env.Append( LIBPATH = [ os.path.join( LIBZMQ_SRC, r'bin\Win32' ) ] )
+env.Append( LIBS = [ 'libzmq_d' ] )
+env.Append( LIBPATH = [ os.path.join( CZMQ_SRC, r'builds\msvc\Debug' ) ] )
+env.Append( LIBS = [ 'czmq' ] )
+source = [ 'main.cpp', 'render.cpp', 'game.cpp' ]
+env.Program( source )
