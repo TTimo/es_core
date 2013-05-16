@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "SDL.h"
 #include "SDL_opengl.h"
-#include "SDL_sysvideo.h"
+#include "SDL_syswm.h"
 #include "SDL_thread.h"
 // bad SDL, bad.. seems to be Windows only at least
 #ifdef main
@@ -38,14 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OgreRenderWindow.h"
 
 #include "czmq.h"
-
-#ifdef __WINDOWS__
-  #include "SDL_windowswindow.h"
-#elif __LINUX__
-  #include "SDL_x11video.h"
-#elif __APPLE__
-  #include "OSX_wrap.h"
-#endif
 
 #include "render.h"
 #include "game.h"
@@ -139,6 +131,12 @@ int main( int argc, char *argv[] ) {
     return -1;
   }
 #endif
+  SDL_SysWMinfo syswm_info;
+  SDL_VERSION( &syswm_info.version );
+  if ( !SDL_GetWindowWMInfo( window, &syswm_info ) ) {
+    printf( "SDL_GetWindowWMInfo failed.\n" );
+    return -1;
+  }
   
   try {
 
@@ -163,20 +161,18 @@ int main( int argc, char *argv[] ) {
     params["externalGLControl"] = "1";
     // only supported for Win32 on Ogre 1.8 not on other platforms (documentation needs fixing to accurately reflect this)
     params["externalGLContext"] = Ogre::StringConverter::toString( (unsigned long)glcontext );
-    SDL_WindowData * win32_window_data = (SDL_WindowData*)window->driverdata;
-    params["externalWindowHandle"] = Ogre::StringConverter::toString( (unsigned long)win32_window_data->hwnd );
+    params["externalWindowHandle"] = Ogre::StringConverter::toString( (unsigned long)syswm_info.info.windows.window );
 #elif __LINUX__
     params["externalGLControl"] = "1";
     // not documented in Ogre 1.8 mainline, supported for GLX and EGL{Win32,X11}
     params["currentGLContext"] = "1";
     // NOTE: externalWindowHandle is reported as deprecated (GLX Ogre 1.8)
-    SDL_WindowData * x11_window_data = (SDL_WindowData*)window->driverdata;
-    params["parentWindowHandle"] = Ogre::StringConverter::toString( x11_window_data->xwindow );
+    params["parentWindowHandle"] = Ogre::StringConverter::toString( (unsigned long)syswm_info.info.x11.window );
 #elif __APPLE__
     params["externalGLControl"] = "1";
     // only supported for Win32 on Ogre 1.8 not on other platforms (documentation needs fixing to accurately reflect this)
     //    params["externalGLContext"] = Ogre::StringConverter::toString( glcontext );
-    params["externalWindowHandle"] = OSX_cocoa_view( window );
+    params["externalWindowHandle"] = Ogre::StringConverter::toString( (unsigned long)syswm_info.info.cocoa.window );
     params["macAPI"] = "cocoa";
     params["macAPICocoaUseNSView"] = "true";
 #endif

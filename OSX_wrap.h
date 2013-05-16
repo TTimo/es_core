@@ -30,8 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // C++ header so we keep the Obj-C stuff contained
 
-Ogre::String OSX_cocoa_view( SDL_Window * );
-
 void OSX_GL_set_current( Ogre::RenderWindow * ogre_render_window );
 void OSX_GL_clear_current( Ogre::RenderWindow * ogre_render_window );
 
