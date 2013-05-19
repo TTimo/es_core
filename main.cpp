@@ -161,7 +161,7 @@ int main( int argc, char *argv[] ) {
     params["externalGLControl"] = "1";
     // only supported for Win32 on Ogre 1.8 not on other platforms (documentation needs fixing to accurately reflect this)
     params["externalGLContext"] = Ogre::StringConverter::toString( (unsigned long)glcontext );
-    params["externalWindowHandle"] = Ogre::StringConverter::toString( (unsigned long)syswm_info.info.windows.window );
+    params["externalWindowHandle"] = Ogre::StringConverter::toString( (unsigned long)syswm_info.info.win.window );
 #elif __LINUX__
     params["externalGLControl"] = "1";
     // not documented in Ogre 1.8 mainline, supported for GLX and EGL{Win32,X11}
