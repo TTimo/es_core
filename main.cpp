@@ -39,6 +39,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "czmq.h"
 
+#ifdef __APPLE__
+  #include "OSX_wrap.h"
+#endif
+
 #include "render.h"
 #include "game.h"
 
@@ -172,7 +176,7 @@ int main( int argc, char *argv[] ) {
     params["externalGLControl"] = "1";
     // only supported for Win32 on Ogre 1.8 not on other platforms (documentation needs fixing to accurately reflect this)
     //    params["externalGLContext"] = Ogre::StringConverter::toString( glcontext );
-    params["externalWindowHandle"] = Ogre::StringConverter::toString( (unsigned long)syswm_info.info.cocoa.window );
+    params["externalWindowHandle"] = OSX_cocoa_view( syswm_info );
     params["macAPI"] = "cocoa";
     params["macAPICocoaUseNSView"] = "true";
 #endif
