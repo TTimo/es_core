@@ -29,7 +29,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OgrePlatform.h"
 #include "OgreOSXCocoaWindow.h"
 
+#include "SDL.h"
+#include "SDL_syswm.h"
+
 #include "OSX_wrap.h"
+
+Ogre::String OSX_cocoa_view( SDL_SysWMinfo &info ) {
+  NSWindow * window = info.info.cocoa.window;
+  NSView * view = [window contentView];
+  return Ogre::StringConverter::toString( (unsigned long)view );
+}
 
 void OSX_GL_set_current( Ogre::RenderWindow * ogre_render_window ) {
   Ogre::OSXCocoaWindow * cocoa_window = (Ogre::OSXCocoaWindow*)ogre_render_window;

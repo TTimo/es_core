@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "SDL.h"
 #include "SDL_thread.h"
+#include "SDL_syswm.h"
 
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
