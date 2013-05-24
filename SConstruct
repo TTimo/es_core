@@ -20,7 +20,7 @@ env.ParseConfig( '%s --cflags --libs' % SDL2_CONFIG )
 env.Append( CPPPATH = os.path.join( OGRE_SRC, 'include' ) )
 env.Append( CPPPATH = os.path.join( OGRE_SRC, 'OgreMain/include' ) )
 
-source = [ 'main.cpp', 'render.cpp', 'game.cpp' ]
+source = [ 'main.cpp', 'render_main.cpp', 'game_main.cpp' ]
 
 if ( system == 'Darwin' ):
     env.Append( CCFLAGS = [ '-arch', 'x86_64', '-mmacosx-version-min=10.6' ] )
@@ -42,7 +42,12 @@ else:
     env.Append( RPATH = [ '/usr/local/lib' ] )
     env.Append( RPATH = [ '.' ] )
 
-core = env.Program( 'core', source )
+# TODO: some refactoring needed to properly support multiple targets here..
+
+core = env.Program( 'core', source + [ 'input_test/game.cpp', 'input_test/render.cpp' ] )
+
+env.Append( CPPPATH = [ 'mesh_loader' ] )
+mesh = env.Program( 'mesh', source + [ 'mesh_loader/game.cpp', 'mesh_loader/render.cpp' ] )
 
 if ( system == 'Darwin' ):
 

@@ -25,17 +25,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _GAME_RENDER_H_
-#define _GAME_RENDER_H_
+#ifndef _GAME_MAIN_H_
+#define _GAME_MAIN_H_
 
-// state emitted by the game thread, and shared with the render thread
+typedef struct GameThreadParms_s {
+  zctx_t * zmq_context;
+} GameThreadParms;
 
-typedef struct SharedRenderState_s {
-  // control the head position and orientation
-  Ogre::Vector3 position;
-  Ogre::Quaternion orientation;
-  // an extra vector to visualize the rotation
-  Ogre::Vector3 smoothed_angular;
-} SharedRenderState;
+int game_thread( void * );
 
 #endif

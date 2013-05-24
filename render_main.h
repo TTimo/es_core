@@ -25,13 +25,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _GAME_H_
-#define _GAME_H_
+#ifndef _RENDER_MAIN_H_
+#define _RENDER_MAIN_H_
 
-typedef struct GameThreadParms_s {
+typedef struct RenderThreadParms_s {
+  Ogre::Root * root;
+  SDL_Window * window;
+  SDL_GLContext gl_context;
+  Ogre::RenderWindow * ogre_window;
   zctx_t * zmq_context;
-} GameThreadParms;
+} RenderThreadParms;
 
-int game_thread( void * );
+int render_thread( void * );
 
 #endif

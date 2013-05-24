@@ -44,7 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #include "render.h"
-#include "game.h"
+#include "game_main.h"
 
 typedef struct InputState_s {
   float yaw_sens;
