@@ -25,8 +25,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _GAME_STATE_H_
-#define _GAME_STATE_H_
+#ifndef _GAME_H_
+#define _GAME_H_
 
 // state emitted by the game thread, and shared with the render thread
 

@@ -31,6 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // state emitted by the game thread, and shared with the render thread
 
 typedef struct SharedRenderState_s {
+  unsigned int game_time; // needs to be the first parameter
 } SharedRenderState;
 
 #endif

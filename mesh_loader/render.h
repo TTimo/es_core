@@ -25,17 +25,14 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _RENDER_MAIN_H_
-#define _RENDER_MAIN_H_
+#ifndef _RENDER_H_
+#define _RENDER_H_
 
-typedef struct RenderThreadParms_s {
-  Ogre::Root * root;
-  SDL_Window * window;
-  SDL_GLContext gl_context;
-  Ogre::RenderWindow * ogre_window;
-  zctx_t * zmq_context;
-} RenderThreadParms;
+typedef struct RenderState_s {
+} RenderState;
 
-int render_thread( void * );
+void render_init( RenderState & rs, SharedRenderState & srs );
+void parse_render_state( RenderState & rs, SharedRenderState & srs );
+void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render );
 
 #endif

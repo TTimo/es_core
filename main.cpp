@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   #include "OSX_wrap.h"
 #endif
 
-#include "render.h"
+#include "render_main.h"
 #include "game_main.h"
 
 typedef struct InputState_s {

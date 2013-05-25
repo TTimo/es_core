@@ -49,6 +49,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // per project includes:
 // those headers are in each project subdirectory
 #include "shared_render_state.h"
+#include "render.h"
 
 int render_thread( void * _parms ) {
   RenderThreadParms * parms = (RenderThreadParms*)_parms;
@@ -85,13 +86,14 @@ int render_thread( void * _parms ) {
   unsigned int next_game_time = 0;
 
   // internal render state, not part of the interpolation
-  //  RenderState rs;
+  RenderState rs;
 
-  // always interpolating between two states
-  SharedRenderState previous_render;
-  SharedRenderState next_render;
+  // always interpolating between two states  
+  SharedRenderState srs[2];
+  unsigned int srs_index = 0;
+  srs[0].game_time = srs[1].game_time = 0;
 
-  // TODO: initialize the scene setup
+  render_init( rs, srs[0] );
 
   while ( true ) {
     char * cmd = zstr_recv_nowait( zmq_control_socket );
@@ -107,20 +109,23 @@ int render_thread( void * _parms ) {
 	break;
       }
 
-      // TODO: parse a new render state
+      // TODO: previous_render_time, next_render_time housekeeping
 
+      srs_index ^= 1;
+      parse_render_state( rs, srs[ srs_index ] );
+
+      free( game_tick );
     }
 
     // skip rendering until enough data has come in to support interpolation
-    if ( previous_game_time == next_game_time ) { // 0 == 0
+    if ( srs[0].game_time == srs[1].game_time ) { // 0 == 0
       continue;
     }
     unsigned int pre_render_time = SDL_GetTicks();
     float ratio = (float)( pre_render_time - previous_game_time ) / (float)( next_game_time - previous_game_time );
     printf( "render ratio %f\n", ratio );
-    SharedRenderState interpolated_render;
 
-    // TODO: interpolate and render
+    interpolate_and_render( rs, ratio, srs[ srs_index ^ 1 ], srs[ srs_index ] );
 
     parms->root->_fireFrameStarted();
     parms->root->renderOneFrame();
