@@ -84,7 +84,7 @@ int render_thread( void * _parms ) {
   unsigned int previous_game_time = 0;
   unsigned int next_game_time = 0;
 
-  // discreet state, not part of the interpolation
+  // internal render state, not part of the interpolation
   //  RenderState rs;
 
   // always interpolating between two states

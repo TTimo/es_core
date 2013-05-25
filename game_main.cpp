@@ -43,30 +43,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // per project includes:
 // those headers are in each project subdirectory
 #include "shared_render_state.h"
+#include "game.h"
 
 const int GAME_DELAY = 16;
 const float GAME_TICK_FLOAT = (float)GAME_DELAY / 1000.0f;
 
 int game_thread( void * _parms ) {
   GameThreadParms * parms = (GameThreadParms*)_parms;
+  GameThreadSockets gsockets;
 
   GameState gs;
   SharedRenderState rs;
 
   game_init( gs, rs );
 
-  gs.zmq_control_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
+  gsockets.zmq_control_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
   {
-    int ret = zsocket_connect( gs.zmq_control_socket, "inproc://control_game" );
+    int ret = zsocket_connect( gsockets.zmq_control_socket, "inproc://control_game" );
     assert( ret == 0 );
   }
   
-  gs.zmq_render_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
-  zsocket_bind( gs.zmq_render_socket, "inproc://game_render" );
+  gsockets.zmq_render_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
+  zsocket_bind( gsockets.zmq_render_socket, "inproc://game_render" );
 
-  gs.zmq_input_req = zsocket_new( parms->zmq_context, ZMQ_REQ );
+  gsockets.zmq_input_req = zsocket_new( parms->zmq_context, ZMQ_REQ );
   {
-    int ret = zsocket_connect( gs.zmq_input_req, "inproc://input" );
+    int ret = zsocket_connect( gsockets.zmq_input_req, "inproc://input" );
     assert( ret == 0 );
   }
 
@@ -83,14 +85,14 @@ int game_thread( void * _parms ) {
       game_tick( now, gs, rs );
       // notify the render thread that a new game state is ready.
       // on the next render frame, it will start interpolating between the previous state and this new one
-      zstr_sendf( gs.zmq_render_socket, "%d %f %f %f %f %f %f %f %f %f", baseline + framenum * GAME_DELAY, rs.position.x, rs.position.y, rs.orientation.w, rs.orientation.x, rs.orientation.y, rs.orientation.z, rs.smoothed_angular.x, rs.smoothed_angular.y, rs.smoothed_angular.z );
+      emit_render_state( gsockets.zmq_render_socket, baseline + framenum * GAME_DELAY, rs );
     } else {
       int ahead = framenum * GAME_DELAY - ( now - baseline );
       assert( ahead > 0 );
       printf( "game sleep %d ms\n", ahead );
       SDL_Delay( ahead );
     }
-    char * cmd = zstr_recv_nowait( gs.zmq_control_socket );
+    char * cmd = zstr_recv_nowait( gsockets.zmq_control_socket );
     if ( cmd != NULL ) {
       assert( strcmp( cmd, "stop" ) == 0 );
       free( cmd );

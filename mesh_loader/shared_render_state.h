@@ -25,19 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _GAME_MAIN_H_
-#define _GAME_MAIN_H_
+#ifndef _SHARED_RENDER_STATE_H_
+#define _SHARED_RENDER_STATE_H_
 
-typedef struct GameThreadParms_s {
-  zctx_t * zmq_context;
-} GameThreadParms;
+// state emitted by the game thread, and shared with the render thread
 
-typedef struct GameThreadSockets_s {
-  void * zmq_control_socket;
-  void * zmq_input_req;
-  void * zmq_render_socket;
-} GameThreadSockets;
-
-int game_thread( void * ); // GameThreadParms *
+typedef struct SharedRenderState_s {
+} SharedRenderState;
 
 #endif
