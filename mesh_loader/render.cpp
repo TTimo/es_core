@@ -25,10 +25,57 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "SDL.h"
+
+#include "OgreRoot.h"
+#include "OgreRenderWindow.h"
+#include "OgreViewport.h"
+#include "OgreEntity.h"
+#include "OgreManualObject.h"
+
+#include "czmq.h"
+
+#include "../render_main.h"
+
 #include "shared_render_state.h"
 #include "render.h"
 
-void render_init( RenderState & rs, SharedRenderState & srs ) { }
-void parse_render_state( RenderState & rs, SharedRenderState & srs ) { }
-void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) { }
+void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs ) {
+  // create a test scene
+  Ogre::ResourceGroupManager &mgr = Ogre::ResourceGroupManager::getSingleton();
 
+  mgr.addResourceLocation( "media/models", "FileSystem", "General" );
+  mgr.addResourceLocation( "media/materials/scripts", "FileSystem", "General" );
+  mgr.addResourceLocation( "media/materials/textures", "FileSystem", "General" );
+  mgr.addResourceLocation( "media/materials/programs", "FileSystem", "General" );
+
+  mgr.initialiseAllResourceGroups();
+
+  Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
+  scene->setAmbientLight( Ogre::ColourValue( 0.5f, 0.5f, 0.5f ) );
+  Ogre::Entity * model = scene->createEntity( "model", "sarlat.mesh" );
+  Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
+  node->attachObject( model );
+
+  node->setPosition( Ogre::Vector3::ZERO );
+  node->setOrientation( Ogre::Quaternion::IDENTITY );
+
+  Ogre::Light * light = scene->createLight( "light" );
+  light->setPosition( 20.0f, 80.0f, 50.0f );
+
+  Ogre::Camera * camera = scene->createCamera( "cam" );
+  camera->setPosition( Ogre::Vector3( 0, 0, 90 ) );
+  camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
+  camera->setNearClipDistance( 5 );
+
+  Ogre::Viewport * viewport = parms->ogre_window->addViewport( camera );
+  viewport->setBackgroundColour( Ogre::ColourValue( 0, 0, 0 ) );
+  camera->setAspectRatio( Ogre::Real( viewport->getActualWidth() ) / Ogre::Real( viewport->getActualHeight() ) );
+
+}
+
+void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg ) {
+  srs.game_time = atoi( msg );
+}
+
+void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) { }

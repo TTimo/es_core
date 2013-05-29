@@ -30,10 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SDL_syswm.h"
 
 #include "OgreRoot.h"
-#include "OgreRenderWindow.h"
-#include "OgreViewport.h"
-#include "OgreEntity.h"
-#include "OgreManualObject.h"
 
 #include "czmq.h"
 
@@ -82,9 +78,6 @@ int render_thread( void * _parms ) {
   SDL_GL_MakeCurrent( parms->window, parms->gl_context );
 #endif
 
-  unsigned int previous_game_time = 0;
-  unsigned int next_game_time = 0;
-
   // internal render state, not part of the interpolation
   RenderState rs;
 
@@ -93,7 +86,7 @@ int render_thread( void * _parms ) {
   unsigned int srs_index = 0;
   srs[0].game_time = srs[1].game_time = 0;
 
-  render_init( rs, srs[0] );
+  render_init( parms, rs, srs[0] );
 
   while ( true ) {
     char * cmd = zstr_recv_nowait( zmq_control_socket );
@@ -112,7 +105,7 @@ int render_thread( void * _parms ) {
       // TODO: previous_render_time, next_render_time housekeeping
 
       srs_index ^= 1;
-      parse_render_state( rs, srs[ srs_index ] );
+      parse_render_state( rs, srs[ srs_index ], game_tick );
 
       free( game_tick );
     }
@@ -122,7 +115,7 @@ int render_thread( void * _parms ) {
       continue;
     }
     unsigned int pre_render_time = SDL_GetTicks();
-    float ratio = (float)( pre_render_time - previous_game_time ) / (float)( next_game_time - previous_game_time );
+    float ratio = (float)( pre_render_time - srs[ srs_index ^ 1 ].game_time ) / (float)( srs[ srs_index ].game_time - srs[ srs_index ^ 1 ].game_time );
     printf( "render ratio %f\n", ratio );
 
     interpolate_and_render( rs, ratio, srs[ srs_index ^ 1 ], srs[ srs_index ] );
