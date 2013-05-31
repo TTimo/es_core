@@ -57,15 +57,20 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
   node->attachObject( model );
 
+  // put the model in the ZX plane
   node->setPosition( Ogre::Vector3::ZERO );
-  node->setOrientation( Ogre::Quaternion::IDENTITY );
+  node->pitch( Ogre::Radian( Ogre::Degree( 90.0f ) ), Ogre::Node::TS_WORLD );
 
   Ogre::Light * light = scene->createLight( "light" );
   light->setPosition( 20.0f, 80.0f, 50.0f );
 
   Ogre::Camera * camera = scene->createCamera( "cam" );
-  camera->setPosition( Ogre::Vector3( 0, 0, 90 ) );
-  camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
+
+  // BUG: vertical camera has a problem??
+  camera->setPosition( Ogre::Vector3( 0, 5000, 1 ) );
+
+  camera->lookAt( Ogre::Vector3( 0, 0, 0 ) );
+
   camera->setNearClipDistance( 5 );
 
   Ogre::Viewport * viewport = parms->ogre_window->addViewport( camera );
