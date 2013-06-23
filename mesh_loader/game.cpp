@@ -25,13 +25,19 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "OgreRoot.h"
+
 #include "czmq.h"
 
 #include "shared_render_state.h"
 #include "game.h"
 
-void game_init( GameState & gs, SharedRenderState & rs ) { }
-void game_tick( unsigned int now, GameState & gs, SharedRenderState & rs ) { }
+void game_init( GameState & gs, SharedRenderState & rs ) {
+  rs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
+}
+void game_tick( unsigned int now, GameState & gs, SharedRenderState & rs ) {
+  rs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
+}
 
 void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs ) {
   zstr_sendf( socket, "%d", time );

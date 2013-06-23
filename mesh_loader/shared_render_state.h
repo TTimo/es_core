@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 typedef struct SharedRenderState_s {
   unsigned int game_time; // needs to be the first parameter
+  Ogre::Vector3 position;
 } SharedRenderState;
 
 #endif

@@ -222,8 +222,11 @@ int main( int argc, char *argv[] ) {
 #endif
     SDL_Thread * sdl_render_thread = SDL_CreateThread( render_thread, "render", &render_thread_parms );
 
+    // TMP OFF
+#if 0
     SDL_SetWindowGrab( window, SDL_TRUE );
     SDL_SetRelativeMouseMode( SDL_TRUE );
+#endif
   
     const int MAX_RUN_TIME = 60 * 1000; // shutdown the whole thing after some time
     bool shutdown_requested = false;

@@ -1,0 +1,14 @@
+material es_core/flat
+{
+	technique
+	{
+		pass
+		{
+			lighting on
+			shading flat
+			ambient 0.1 0.1 0.15 1
+			diffuse 0.95 0.95 1.0 1
+			emissive 0 0 0 1
+		}
+	}
+}

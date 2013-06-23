@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "render.h"
 
 void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs ) {
-  // create a test scene
+
   Ogre::ResourceGroupManager &mgr = Ogre::ResourceGroupManager::getSingleton();
 
   mgr.addResourceLocation( "media/models", "FileSystem", "General" );
@@ -51,30 +51,7 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 
   mgr.initialiseAllResourceGroups();
 
-  Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
-  scene->setAmbientLight( Ogre::ColourValue( 0.5f, 0.5f, 0.5f ) );
-  Ogre::Entity * model = scene->createEntity( "model", "barcelona.mesh" );
-  model->setMaterialName( "es_core/flat" );
-  Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
-  node->attachObject( model );
-
-  // put the model in the ZX plane
-  node->setPosition( Ogre::Vector3::ZERO );
-  node->pitch( Ogre::Radian( Ogre::Degree( 90.0f ) ), Ogre::Node::TS_WORLD );
-
-  Ogre::Light * light = scene->createLight( "light" );
-  light->setPosition( 600.0f, 1000.0f, 300.0f );
-
-  Ogre::Camera * camera = scene->createCamera( "cam" );
-  camera->setPosition( Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f ) );
-  camera->lookAt( Ogre::Vector3( 0.0f, 0.0f, 0.0f ) );
-
-  camera->setNearClipDistance( 5 );
-
-  Ogre::Viewport * viewport = parms->ogre_window->addViewport( camera );
-  viewport->setBackgroundColour( Ogre::ColourValue( 0, 0, 0 ) );
-  camera->setAspectRatio( Ogre::Real( viewport->getActualWidth() ) / Ogre::Real( viewport->getActualHeight() ) );
-
+  // SCENE INITIALIZATION GOES HERE
 }
 
 void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg ) {

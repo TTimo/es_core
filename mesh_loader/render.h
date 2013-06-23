@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _RENDER_H_
 
 typedef struct RenderState_s {
+  Ogre::Camera * camera;
 } RenderState;
 
 void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs );

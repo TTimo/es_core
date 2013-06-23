@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "render.h"
 
 void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs ) {
-  // create a test scene
+
   Ogre::ResourceGroupManager &mgr = Ogre::ResourceGroupManager::getSingleton();
 
   mgr.addResourceLocation( "media/models", "FileSystem", "General" );
@@ -53,7 +53,8 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 
   Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
   scene->setAmbientLight( Ogre::ColourValue( 0.5f, 0.5f, 0.5f ) );
-  Ogre::Entity * model = scene->createEntity( "model", "sarlat.mesh" );
+  Ogre::Entity * model = scene->createEntity( "model", "barcelona.mesh" );
+  model->setMaterialName( "es_core/flat" );
   Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
   node->attachObject( model );
 
@@ -62,25 +63,26 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   node->pitch( Ogre::Radian( Ogre::Degree( 90.0f ) ), Ogre::Node::TS_WORLD );
 
   Ogre::Light * light = scene->createLight( "light" );
-  light->setPosition( 20.0f, 80.0f, 50.0f );
+  light->setPosition( 600.0f, 1000.0f, 300.0f );
 
-  Ogre::Camera * camera = scene->createCamera( "cam" );
+  rs.camera = scene->createCamera( "cam" );
+  /*
+  camera->setPosition( Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f ) );
+  camera->lookAt( Ogre::Vector3( 0.0f, 0.0f, 0.0f ) );
+  */
 
-  // BUG: vertical camera has a problem??
-  camera->setPosition( Ogre::Vector3( 0, 5000, 1 ) );
+  rs.camera->setNearClipDistance( 5 );
 
-  camera->lookAt( Ogre::Vector3( 0, 0, 0 ) );
-
-  camera->setNearClipDistance( 5 );
-
-  Ogre::Viewport * viewport = parms->ogre_window->addViewport( camera );
+  Ogre::Viewport * viewport = parms->ogre_window->addViewport( rs.camera );
   viewport->setBackgroundColour( Ogre::ColourValue( 0, 0, 0 ) );
-  camera->setAspectRatio( Ogre::Real( viewport->getActualWidth() ) / Ogre::Real( viewport->getActualHeight() ) );
-
+  rs.camera->setAspectRatio( Ogre::Real( viewport->getActualWidth() ) / Ogre::Real( viewport->getActualHeight() ) );
 }
 
 void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg ) {
   srs.game_time = atoi( msg );
 }
 
-void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) { }
+void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) {
+  Ogre::Vector3 v = ( 1.0f - ratio ) * previous_render.position + ratio * next_render.position;
+  rs.camera->setPosition( v );
+}
