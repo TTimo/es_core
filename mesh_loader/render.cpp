@@ -40,6 +40,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "shared_render_state.h"
 #include "render.h"
 
+void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation ) {
+  char * start = mouse_state;
+  char * end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.w = atof( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.x = atof( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.y = atof( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.z = atof( start );
+  // NOTE: skipping the button state
+}
+
 void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs ) {
 
   Ogre::ResourceGroupManager &mgr = Ogre::ResourceGroupManager::getSingleton();
@@ -83,6 +103,12 @@ void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg )
 }
 
 void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) {
+  zstr_send( rs.zmq_input_req, "mouse_state" );
+  char * mouse_state = zstr_recv( rs.zmq_input_req );
+  Ogre::Quaternion o;
+  parse_mouse_state( mouse_state, o );
+  rs.camera->setOrientation( o );
+  free( mouse_state );
   Ogre::Vector3 v = ( 1.0f - ratio ) * previous_render.position + ratio * next_render.position;
   rs.camera->setPosition( v );
 }

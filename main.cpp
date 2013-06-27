@@ -222,11 +222,8 @@ int main( int argc, char *argv[] ) {
 #endif
     SDL_Thread * sdl_render_thread = SDL_CreateThread( render_thread, "render", &render_thread_parms );
 
-    // TMP OFF
-#if 0
     SDL_SetWindowGrab( window, SDL_TRUE );
     SDL_SetRelativeMouseMode( SDL_TRUE );
-#endif
   
     const int MAX_RUN_TIME = 60 * 1000; // shutdown the whole thing after some time
     bool shutdown_requested = false;
@@ -253,7 +250,8 @@ int main( int argc, char *argv[] ) {
 	  }
 	} else if ( event.type == SDL_MOUSEMOTION ) {
 	  SDL_MouseMotionEvent * mev = (SDL_MouseMotionEvent*)&event;
-	  is.yaw += is.yaw_sens * (float)mev->xrel;
+	  // + when manipulating an object, - when doing a first person view .. needs to be configurable?
+	  is.yaw -= is.yaw_sens * (float)mev->xrel;
 	  if ( is.yaw >= 0.0f ) {
 	    is.yaw = fmod( is.yaw + 180.0f, 360.0f ) - 180.0f;
 	  } else {

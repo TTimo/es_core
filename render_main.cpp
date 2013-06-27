@@ -48,6 +48,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "render.h"
 
 int render_thread( void * _parms ) {
+  // internal render state, not part of the interpolation
+  RenderState rs;
+
   RenderThreadParms * parms = (RenderThreadParms*)_parms;
 
   void * zmq_control_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
@@ -65,9 +68,9 @@ int render_thread( void * _parms ) {
     assert( ret == 0 );
   }
 
-  void * zmq_input_req = zsocket_new( parms->zmq_context, ZMQ_REQ );
+  rs.zmq_input_req = zsocket_new( parms->zmq_context, ZMQ_REQ );
   {
-    int ret = zsocket_connect( zmq_input_req, "inproc://input" );
+    int ret = zsocket_connect( rs.zmq_input_req, "inproc://input" );
     assert( ret == 0 );
   }
 
@@ -77,9 +80,6 @@ int render_thread( void * _parms ) {
   // NOTE: no SDL_GL_ on OSX when Ogre is in charge of the context!
   SDL_GL_MakeCurrent( parms->window, parms->gl_context );
 #endif
-
-  // internal render state, not part of the interpolation
-  RenderState rs;
 
   // always interpolating between two states  
   SharedRenderState srs[2];
