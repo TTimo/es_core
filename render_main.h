@@ -36,6 +36,10 @@ typedef struct RenderThreadParms_s {
   zctx_t * zmq_context;
 } RenderThreadParms;
 
+typedef struct RenderThreadSockets_s {
+  void * zmq_input_req;
+} RenderThreadSockets;
+
 int render_thread( void * );
 
 #endif

@@ -30,11 +30,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 typedef struct RenderState_s {
   Ogre::Camera * camera;
-  void * zmq_input_req;
 } RenderState;
 
 void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs );
 void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg );
-void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render );
+void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render );
 
 #endif

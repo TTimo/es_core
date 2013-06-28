@@ -284,6 +284,8 @@ int main( int argc, char *argv[] ) {
 	int x, y;
 	Uint8 buttons = SDL_GetMouseState( &x, &y );
 	zstr_sendf( zmq_input_rep, "%f %f %f %f %d", is.orientation.w, is.orientation.x, is.orientation.y, is.orientation.z, buttons );
+      } else if ( strcmp( input_request, "kb_state" ) == 0 ) {
+	
       } else if ( strncmp( input_request, "mouse_reset", strlen( "mouse_reset" ) ) == 0 ) {
 	// reset the orientation
 	parse_orientation( input_request + strlen( "mouse_reset" ) + 1, is.orientation );

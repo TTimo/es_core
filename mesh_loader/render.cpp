@@ -102,9 +102,9 @@ void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg )
   srs.game_time = atoi( msg );
 }
 
-void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) {
-  zstr_send( rs.zmq_input_req, "mouse_state" );
-  char * mouse_state = zstr_recv( rs.zmq_input_req );
+void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) {
+  zstr_send( rsockets.zmq_input_req, "mouse_state" );
+  char * mouse_state = zstr_recv( rsockets.zmq_input_req );
   Ogre::Quaternion o;
   parse_mouse_state( mouse_state, o );
   rs.camera->setOrientation( o );

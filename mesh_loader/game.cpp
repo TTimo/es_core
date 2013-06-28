@@ -35,11 +35,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 void game_init( GameState & gs, SharedRenderState & rs ) {
   rs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
 }
+
 void game_tick( unsigned int now, GameState & gs, SharedRenderState & rs ) {
+
+  // parse input state: mouse orientation and keys
+  // wasd for h. movement, space to go up, alt to go down
+  // keep right mouse pressed to slow down, left mouse to move faster
+
+  // support free fly
+
   rs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
 }
 
 void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs ) {
   zstr_sendf( socket, "%d", time );
 }
-

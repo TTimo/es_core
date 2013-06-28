@@ -48,10 +48,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "render.h"
 
 int render_thread( void * _parms ) {
-  // internal render state, not part of the interpolation
-  RenderState rs;
-
   RenderThreadParms * parms = (RenderThreadParms*)_parms;
+  RenderThreadSockets rsockets;
 
   void * zmq_control_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
   {
@@ -68,9 +66,9 @@ int render_thread( void * _parms ) {
     assert( ret == 0 );
   }
 
-  rs.zmq_input_req = zsocket_new( parms->zmq_context, ZMQ_REQ );
+  rsockets.zmq_input_req = zsocket_new( parms->zmq_context, ZMQ_REQ );
   {
-    int ret = zsocket_connect( rs.zmq_input_req, "inproc://input" );
+    int ret = zsocket_connect( rsockets.zmq_input_req, "inproc://input" );
     assert( ret == 0 );
   }
 
@@ -80,6 +78,9 @@ int render_thread( void * _parms ) {
   // NOTE: no SDL_GL_ on OSX when Ogre is in charge of the context!
   SDL_GL_MakeCurrent( parms->window, parms->gl_context );
 #endif
+
+  // internal render state, not part of the interpolation
+  RenderState rs;
 
   // always interpolating between two states  
   SharedRenderState srs[2];
@@ -118,7 +119,7 @@ int render_thread( void * _parms ) {
     float ratio = (float)( pre_render_time - srs[ srs_index ^ 1 ].game_time ) / (float)( srs[ srs_index ].game_time - srs[ srs_index ^ 1 ].game_time );
     printf( "render ratio %f\n", ratio );
 
-    interpolate_and_render( rs, ratio, srs[ srs_index ^ 1 ], srs[ srs_index ] );
+    interpolate_and_render( rsockets, rs, ratio, srs[ srs_index ^ 1 ], srs[ srs_index ] );
 
     parms->root->_fireFrameStarted();
     parms->root->renderOneFrame();
