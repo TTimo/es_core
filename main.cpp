@@ -257,7 +257,8 @@ int main( int argc, char *argv[] ) {
 	  } else {
 	    is.yaw = fmod( is.yaw - 180.0f, 360.0f ) + 180.0f;
 	  }
-	  is.pitch += is.pitch_sens * (float)mev->yrel;
+	  // + when manipulating an object, - when doing a first person view .. needs to be configurable?
+	  is.pitch -= is.pitch_sens * (float)mev->yrel;
 	  if ( is.pitch > 90.0f ) {
 	    is.pitch = 90.0f;
 	  } else if ( is.pitch < -90.0f ) {
@@ -285,7 +286,10 @@ int main( int argc, char *argv[] ) {
 	Uint8 buttons = SDL_GetMouseState( &x, &y );
 	zstr_sendf( zmq_input_rep, "%f %f %f %f %d", is.orientation.w, is.orientation.x, is.orientation.y, is.orientation.z, buttons );
       } else if ( strcmp( input_request, "kb_state" ) == 0 ) {
-	
+	// looking at a few hardcoded keys for now
+	// NOTE: I suspect it would be perfectly safe to grab that pointer once, and read it from a different thread?
+	const Uint8 *state = SDL_GetKeyboardState(NULL);
+	zstr_sendf( zmq_input_rep, "%d %d %d %d %d %d", state[ SDL_SCANCODE_W ], state[ SDL_SCANCODE_A ], state[ SDL_SCANCODE_S ], state[ SDL_SCANCODE_D ], state[ SDL_SCANCODE_SPACE ], state[ SDL_SCANCODE_LALT ] );
       } else if ( strncmp( input_request, "mouse_reset", strlen( "mouse_reset" ) ) == 0 ) {
 	// reset the orientation
 	parse_orientation( input_request + strlen( "mouse_reset" ) + 1, is.orientation );

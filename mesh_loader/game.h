@@ -34,7 +34,7 @@ typedef struct GameState_s {
 } GameState;
 
 void game_init( GameState & gs, SharedRenderState & rs );
-void game_tick( unsigned int now, GameState & gs, SharedRenderState & rs );
+void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs, unsigned int now );
 void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs );
 
 #endif

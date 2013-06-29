@@ -53,9 +53,9 @@ int game_thread( void * _parms ) {
   GameThreadSockets gsockets;
 
   GameState gs;
-  SharedRenderState rs;
+  SharedRenderState srs;
 
-  game_init( gs, rs );
+  game_init( gs, srs );
 
   gsockets.zmq_control_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
   {
@@ -82,10 +82,10 @@ int game_thread( void * _parms ) {
       // NOTE: build the state of the world at t = framenum * GAME_DELAY,
       // under normal conditions that's a time in the future
       // (the exception to that is if we are catching up on ticking game frames)
-      game_tick( now, gs, rs );
+      game_tick( gsockets, gs, srs, now );
       // notify the render thread that a new game state is ready.
       // on the next render frame, it will start interpolating between the previous state and this new one
-      emit_render_state( gsockets.zmq_render_socket, baseline + framenum * GAME_DELAY, rs );
+      emit_render_state( gsockets.zmq_render_socket, baseline + framenum * GAME_DELAY, srs );
     } else {
       int ahead = framenum * GAME_DELAY - ( now - baseline );
       assert( ahead > 0 );

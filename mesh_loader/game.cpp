@@ -29,24 +29,100 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "czmq.h"
 
+#include "../game_main.h"
+
 #include "shared_render_state.h"
 #include "game.h"
 
-void game_init( GameState & gs, SharedRenderState & rs ) {
-  rs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
+void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation, uint8_t & buttons ) {
+  char * start = mouse_state;
+  char * end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.w = atof( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.x = atof( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.y = atof( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  orientation.z = atof( start );
+  start = end + 1;
+  buttons = atoi( start );
 }
 
-void game_tick( unsigned int now, GameState & gs, SharedRenderState & rs ) {
-
-  // parse input state: mouse orientation and keys
-  // wasd for h. movement, space to go up, alt to go down
-  // keep right mouse pressed to slow down, left mouse to move faster
-
-  // support free fly
-
-  rs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
+void parse_kb_state( char * kb_state, uint8_t & w, uint8_t & a, uint8_t & s, uint8_t & d, uint8_t & spc, uint8_t & alt ) {
+  char * start = kb_state;
+  char * end = strchr( start, ' ' );
+  end[0] = '\0';
+  w = atoi( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  a = atoi( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  s = atoi( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  d = atoi( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  spc = atoi( start );
+  start = end + 1;
+  alt = atoi( start );
 }
 
-void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs ) {
-  zstr_sendf( socket, "%d", time );
+void game_init( GameState & gs, SharedRenderState & srs ) {
+  // decent vantage point in barcelona
+  //  srs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
+  srs.position = Ogre::Vector3::ZERO;
+}
+
+void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & srs, unsigned int now ) {
+  Ogre::Quaternion o;
+  uint8_t b;
+  zstr_send( gsockets.zmq_input_req, "mouse_state" );
+  char * mouse_state = zstr_recv( gsockets.zmq_input_req );
+  parse_mouse_state( mouse_state, o, b );
+  free( mouse_state );
+
+  uint8_t w, a, s, d, spc, alt;
+  zstr_send( gsockets.zmq_input_req, "kb_state" );
+  char * kb_state = zstr_recv( gsockets.zmq_input_req );
+  parse_kb_state( kb_state, w, a, s, d, spc, alt );
+  free( kb_state );
+
+  float speed = 10.0f;
+  Ogre::Vector3 p = srs.position;
+  if ( w ) {
+    p[0] += speed;
+  }
+  if ( s ) {
+    p[0] -= speed;
+  }
+  if ( a ) {
+    p[2] -= speed;
+  }
+  if ( d ) {
+    p[2] += speed;
+  }
+  if ( spc ) {
+    p[1] += speed;
+  }
+  if ( alt ) {
+    p[1] -= speed;
+  }
+  srs.position = p;
+}
+
+void emit_render_state( void * socket, unsigned int time, SharedRenderState & srs ) {
+  zstr_sendf( socket, "%d %f %f %f", time, srs.position[0], srs.position[1], srs.position[2] );  
 }

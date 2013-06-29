@@ -99,7 +99,20 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 }
 
 void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg ) {
-  srs.game_time = atoi( msg );
+  char * start = msg;
+  char * end = strchr( start, ' ' );
+  end[0] = '\0';
+  srs.game_time = atoi( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  srs.position[0] = atof( start );
+  start = end + 1;
+  end = strchr( start, ' ' );
+  end[0] = '\0';
+  srs.position[1] = atof( start );
+  start = end + 1;
+  srs.position[2] = atof( start );  
 }
 
 void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) {
