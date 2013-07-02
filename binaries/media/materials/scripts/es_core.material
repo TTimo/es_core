@@ -6,8 +6,8 @@ material es_core/flat
 		{
 			lighting on
 			shading flat
-			ambient 0.1 0.1 0.15 1
-			diffuse 0.95 0.95 1.0 1
+			ambient 0.4 0.4 0.45 1
+			diffuse 0.75 0.75 0.75 1
 			emissive 0 0 0 1
 		}
 	}

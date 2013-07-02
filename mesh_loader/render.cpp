@@ -72,7 +72,8 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   mgr.initialiseAllResourceGroups();
 
   Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
-  scene->setAmbientLight( Ogre::ColourValue( 0.5f, 0.5f, 0.5f ) );
+  // this modulates the material's ambient value .. edit the material
+  scene->setAmbientLight( Ogre::ColourValue( 1.0f, 1.0f, 1.0f ) );
   Ogre::Entity * model = scene->createEntity( "model", "barcelona.mesh" );
   model->setMaterialName( "es_core/flat" );
   Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
@@ -84,6 +85,8 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 
   rs.light = scene->createLight( "light" );
   rs.light->setType( Ogre::Light::LT_DIRECTIONAL );
+  // this interacts with the diffuse in the material in ways that I don't completely understand
+  rs.light->setDiffuseColour( 0.6f, 0.6f, 0.6f );
 
   rs.camera = scene->createCamera( "cam" );
 
