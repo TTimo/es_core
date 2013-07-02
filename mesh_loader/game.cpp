@@ -100,27 +100,30 @@ void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState 
   parse_kb_state( kb_state, w, a, s, d, spc, alt );
   free( kb_state );
 
+  // yaw 0 looks towards -Z
+  float yaw = o.getYaw().valueRadians();
+  Ogre::Vector3 xp( cosf( yaw ), 0.0, -sinf( yaw ) );
+  Ogre::Vector3 yp( -sinf( yaw ), 0.0, -cosf( yaw ) );
+
   float speed = 10.0f;
-  Ogre::Vector3 p = srs.position;
   if ( w ) {
-    p[0] += speed;
+    srs.position += speed * yp;
   }
   if ( s ) {
-    p[0] -= speed;
+    srs.position -= speed * yp;
   }
   if ( a ) {
-    p[2] -= speed;
+    srs.position -= speed * xp;
   }
   if ( d ) {
-    p[2] += speed;
+    srs.position += speed * xp;
   }
   if ( spc ) {
-    p[1] += speed;
+    srs.position[1] += speed;
   }
   if ( alt ) {
-    p[1] -= speed;
+    srs.position[1] -= speed;
   }
-  srs.position = p;
 }
 
 void emit_render_state( void * socket, unsigned int time, SharedRenderState & srs ) {
