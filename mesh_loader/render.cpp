@@ -82,14 +82,10 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   node->setPosition( Ogre::Vector3::ZERO );
   node->pitch( Ogre::Radian( Ogre::Degree( 90.0f ) ), Ogre::Node::TS_WORLD );
 
-  Ogre::Light * light = scene->createLight( "light" );
-  light->setPosition( 600.0f, 1000.0f, 300.0f );
+  rs.light = scene->createLight( "light" );
+  rs.light->setType( Ogre::Light::LT_DIRECTIONAL );
 
   rs.camera = scene->createCamera( "cam" );
-  /*
-  camera->setPosition( Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f ) );
-  camera->lookAt( Ogre::Vector3( 0.0f, 0.0f, 0.0f ) );
-  */
 
   rs.camera->setNearClipDistance( 5 );
 
@@ -120,8 +116,12 @@ void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, f
   char * mouse_state = zstr_recv( rsockets.zmq_input_req );
   Ogre::Quaternion o;
   parse_mouse_state( mouse_state, o );
-  rs.camera->setOrientation( o );
   free( mouse_state );
+  rs.camera->setOrientation( o );
+  
+  // with the flat shader and the directional this helps looking at the geometry
+  rs.light->setDirection( rs.camera->getDirection() );
+
   Ogre::Vector3 v = ( 1.0f - ratio ) * previous_render.position + ratio * next_render.position;
   rs.camera->setPosition( v );
 }
