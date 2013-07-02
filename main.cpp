@@ -225,7 +225,7 @@ int main( int argc, char *argv[] ) {
     SDL_SetWindowGrab( window, SDL_TRUE );
     SDL_SetRelativeMouseMode( SDL_TRUE );
   
-    const int MAX_RUN_TIME = 60 * 1000; // shutdown the whole thing after some time
+    const int MAX_RUN_TIME = 3 * 60 * 1000; // shutdown the whole thing after some time
     bool shutdown_requested = false;
     InputState is;
     is.yaw_sens = 0.1f;
