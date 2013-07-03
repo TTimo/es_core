@@ -74,7 +74,13 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
   // this modulates the material's ambient value .. edit the material
   scene->setAmbientLight( Ogre::ColourValue( 1.0f, 1.0f, 1.0f ) );
-  Ogre::Entity * model = scene->createEntity( "model", "barcelona.mesh" );
+  Ogre::Entity * model;
+  if ( parms->argc > 1 ) {
+    printf( "loading model: %s\n", parms->argv[1] );
+    model = scene->createEntity( "model", parms->argv[1] );
+  } else {
+    model = scene->createEntity( "model", "render.mesh" );
+  }
   model->setMaterialName( "es_core/flat" );
   Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
   node->attachObject( model );
