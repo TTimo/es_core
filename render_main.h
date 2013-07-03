@@ -34,6 +34,8 @@ typedef struct RenderThreadParms_s {
   SDL_GLContext gl_context;
   Ogre::RenderWindow * ogre_window;
   zctx_t * zmq_context;
+  int argc;
+  char * * argv;
 } RenderThreadParms;
 
 typedef struct RenderThreadSockets_s {

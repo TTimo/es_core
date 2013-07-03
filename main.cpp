@@ -91,7 +91,6 @@ void wait_shutdown( SDL_Thread * & sdl_render_thread, SDL_Thread * & sdl_game_th
   }
 }
 
-//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int windowStyle ) {
 int main( int argc, char *argv[] ) {
   int retcode = 0;
 
@@ -214,6 +213,8 @@ int main( int argc, char *argv[] ) {
     render_thread_parms.gl_context = glcontext;
     render_thread_parms.ogre_window = ogre_render_window;
     render_thread_parms.zmq_context = zmq_context;
+    render_thread_parms.argc = argc;
+    render_thread_parms.argv = argv;
 #ifdef __APPLE__
     OSX_GL_clear_current( ogre_render_window );
 #else
@@ -332,6 +333,7 @@ int main( int argc, char *argv[] ) {
 
 #ifndef __WINDOWS__
   // FIXME: Windows crashes in the OpenGL drivers inside the DestroyWindow() call ?
+  // (is that related to the main redefine shenanigans?)
   SDL_Quit();
 #endif
 
