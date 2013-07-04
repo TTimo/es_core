@@ -226,7 +226,7 @@ int main( int argc, char *argv[] ) {
     SDL_SetWindowGrab( window, SDL_TRUE );
     SDL_SetRelativeMouseMode( SDL_TRUE );
   
-    const int MAX_RUN_TIME = 3 * 60 * 1000; // shutdown the whole thing after some time
+    //    const int MAX_RUN_TIME = 3 * 60 * 1000; // shutdown the whole thing after some time
     bool shutdown_requested = false;
     InputState is;
     is.yaw_sens = 0.1f;
@@ -234,7 +234,7 @@ int main( int argc, char *argv[] ) {
     is.pitch_sens = 0.1f;
     is.pitch = 0.0f;
     is.roll = 0.0f;
-    while ( SDL_GetTicks() < MAX_RUN_TIME && !shutdown_requested ) {
+    while ( !shutdown_requested /* && SDL_GetTicks() < MAX_RUN_TIME */ ) {
       // we wait here
       char * input_request = zstr_recv( zmq_input_rep );
       // poll for events before processing the request
