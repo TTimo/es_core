@@ -25,14 +25,16 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _RENDER_H_
-#define _RENDER_H_
+#ifndef _GAME_H_
+#define _GAME_H_
 
-typedef struct RenderState_s {
-} RenderState;
+// state emitted by the game thread, and shared with the render thread
 
-void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs );
-void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg );
-void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render );
+typedef struct GameState_s {
+} GameState;
+
+void game_init( GameState & gs, SharedRenderState & rs );
+void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs, unsigned int now );
+void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs );
 
 #endif

@@ -42,26 +42,29 @@ else:
     env.Append( RPATH = [ '/usr/local/lib' ] )
     env.Append( RPATH = [ '.' ] )
 
-# TODO: some refactoring needed to properly support multiple targets here..
+template_env = env.Clone()
+template_env.Append( CPPPATH = [ 'template_src' ] )
+template = template_env.Program( 'template', source + [ 'template_src/game.cpp', 'template_src/render.cpp' ] )
 
-core = env.Program( 'core', source + [ 'input_test/game.cpp', 'input_test/render.cpp' ] )
+#core = env.Program( 'core', source + [ 'input_test/game.cpp', 'input_test/render.cpp' ] )
+#
+#env.Append( CPPPATH = [ 'mesh_loader' ] )
+#mesh = env.Program( 'mesh', source + [ 'mesh_loader/game.cpp', 'mesh_loader/render.cpp' ] )
 
-env.Append( CPPPATH = [ 'mesh_loader' ] )
-mesh = env.Program( 'mesh', source + [ 'mesh_loader/game.cpp', 'mesh_loader/render.cpp' ] )
-
-if ( system == 'Darwin' ):
-
-    def bundle_up( target, source, env ):
-        # point to the bundled libraries
-        # see http://blog.onesadcookie.com/2008/01/installname-magic.html
-        # this is specific to my setup atm, the logic could be made more generic though
-        def check_call( cmd ):
-            print( cmd )
-            subprocess.check_call( cmd, shell = True )
-        map( check_call, [
-            'cp "%s" "%s"' % ( source[0], target[0] ),
-            './binaries/dylibbundler -od -b -d binaries/core.app/Contents/libs -x binaries/core.app/Contents/MacOS/core',
-            ] )
-
-    # NOTE: not in the default target list, invoke 'scons binaries/core.app/Contents/MacOS/core' to update it
-    bundle_core = env.Command( 'binaries/core.app/Contents/MacOS/core', core, Action( bundle_up ) )
+# FIXME: the OSX build and binary distribution strategy needs redone
+#if ( system == 'Darwin' ):
+#
+#    def bundle_up( target, source, env ):
+#        # point to the bundled libraries
+#        # see http://blog.onesadcookie.com/2008/01/installname-magic.html
+#        # this is specific to my setup atm, the logic could be made more generic though
+#        def check_call( cmd ):
+#            print( cmd )
+#            subprocess.check_call( cmd, shell = True )
+#        map( check_call, [
+#            'cp "%s" "%s"' % ( source[0], target[0] ),
+#            './binaries/dylibbundler -od -b -d binaries/core.app/Contents/libs -x binaries/core.app/Contents/MacOS/core',
+#            ] )
+#
+#    # NOTE: not in the default target list, invoke 'scons binaries/core.app/Contents/MacOS/core' to update it
+#    bundle_core = env.Command( 'binaries/core.app/Contents/MacOS/core', core, Action( bundle_up ) )

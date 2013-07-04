@@ -25,37 +25,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "SDL.h"
-
-#include "OgreRoot.h"
-#include "OgreRenderWindow.h"
-#include "OgreViewport.h"
-#include "OgreEntity.h"
-#include "OgreManualObject.h"
-
 #include "czmq.h"
 
-#include "../render_main.h"
+#include "../game_main.h"
 
 #include "shared_render_state.h"
-#include "render.h"
+#include "game.h"
 
-void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs ) {
+void game_init( GameState & gs, SharedRenderState & rs ) { }
+void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs, unsigned int now ) { }
 
-  Ogre::ResourceGroupManager &mgr = Ogre::ResourceGroupManager::getSingleton();
-
-  mgr.addResourceLocation( "media/models", "FileSystem", "General" );
-  mgr.addResourceLocation( "media/materials/scripts", "FileSystem", "General" );
-  mgr.addResourceLocation( "media/materials/textures", "FileSystem", "General" );
-  mgr.addResourceLocation( "media/materials/programs", "FileSystem", "General" );
-
-  mgr.initialiseAllResourceGroups();
-
-  // SCENE INITIALIZATION GOES HERE
+void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs ) {
+  zstr_sendf( socket, "%d", time );
 }
 
-void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg ) {
-  srs.game_time = atoi( msg );
-}
-
-void interpolate_and_render( RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) { }
