@@ -197,15 +197,15 @@ int main( int argc, char *argv[] ) {
     void * zmq_game_socket = zsocket_new( zmq_context, ZMQ_PAIR );
     zsocket_bind( zmq_game_socket, "inproc://control_game" );
     
-    GameThreadParms game_thread_parms;
-    game_thread_parms.zmq_context = zmq_context;
-    SDL_Thread * sdl_game_thread = SDL_CreateThread( game_thread, "game", &game_thread_parms );
-
     void * zmq_render_socket = zsocket_new( zmq_context, ZMQ_PAIR );
     zsocket_bind( zmq_render_socket, "inproc://control_render" );
 
     void * zmq_input_rep = zsocket_new( zmq_context, ZMQ_REP );
     zsocket_bind( zmq_input_rep, "inproc://input" );
+
+    GameThreadParms game_thread_parms;
+    game_thread_parms.zmq_context = zmq_context;
+    SDL_Thread * sdl_game_thread = SDL_CreateThread( game_thread, "game", &game_thread_parms );
 
     RenderThreadParms render_thread_parms;
     render_thread_parms.root = ogre_root;
