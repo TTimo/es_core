@@ -28,6 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _GAME_MAIN_H_
 #define _GAME_MAIN_H_
 
+const int GAME_DELAY = 16;
+const float GAME_TICK_FLOAT = (float)GAME_DELAY / 1000.0f;
+
 typedef struct GameThreadParms_s {
   zctx_t * zmq_context;
 } GameThreadParms;

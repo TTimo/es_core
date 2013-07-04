@@ -44,12 +44,18 @@ else:
 
 template_env = env.Clone()
 template_env.Append( CPPPATH = [ 'template_src' ] )
-template = template_env.Program( 'template', source + [ 'template_src/game.cpp', 'template_src/render.cpp' ] )
+template_env.VariantDir( 'build/template_src', '.' )
+template = template_env.Program( 'template', [ os.path.join( 'build/template_src', s ) for s in source + [ 'template_src/game.cpp', 'template_src/render.cpp' ] ] )
 
-#core = env.Program( 'core', source + [ 'input_test/game.cpp', 'input_test/render.cpp' ] )
-#
-#env.Append( CPPPATH = [ 'mesh_loader' ] )
-#mesh = env.Program( 'mesh', source + [ 'mesh_loader/game.cpp', 'mesh_loader/render.cpp' ] )
+scene_env = env.Clone()
+scene_env.Append( CPPPATH = [ 'scene_load_src' ] )
+scene_env.VariantDir( 'build/scene_load_src', '.' )
+scene = scene_env.Program( 'scene', [ os.path.join( 'build/scene_load_src', s ) for s in source + [ 'scene_load_src/game.cpp', 'scene_load_src/render.cpp' ] ] )
+
+head_env = env.Clone()
+head_env.Append( CPPPATH = [ 'head_src' ] )
+head_env.VariantDir( 'build/head_src', '.' )
+head = head_env.Program( 'head', [ os.path.join( 'build/head_src', s ) for s in source + [ 'head_src/game.cpp', 'head_src/render.cpp' ] ] )
 
 # FIXME: the OSX build and binary distribution strategy needs redone
 #if ( system == 'Darwin' ):

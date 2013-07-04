@@ -45,9 +45,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "shared_render_state.h"
 #include "game.h"
 
-const int GAME_DELAY = 16;
-const float GAME_TICK_FLOAT = (float)GAME_DELAY / 1000.0f;
-
 int game_thread( void * _parms ) {
   GameThreadParms * parms = (GameThreadParms*)_parms;
   GameThreadSockets gsockets;
