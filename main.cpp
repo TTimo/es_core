@@ -49,10 +49,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 typedef struct InputState_s {
   float yaw_sens;
   float pitch_sens;
+  float orientation_factor;	// +1/-1 easy switch between look around and manipulate something
   float yaw;			// degrees, modulo ]-180,180] range
   float pitch;			// degrees, clamped [-90,90] range
   float roll;
-  Ogre::Quaternion orientation;	// current orientation
+  Ogre::Quaternion orientation;	// current orientation  
 } InputState;
 
 void parse_orientation( char * start, Ogre::Quaternion & orientation ) {
@@ -234,6 +235,7 @@ int main( int argc, char *argv[] ) {
     is.pitch_sens = 0.1f;
     is.pitch = 0.0f;
     is.roll = 0.0f;
+    is.orientation_factor = -1.0f; // look around config
     while ( !shutdown_requested /* && SDL_GetTicks() < MAX_RUN_TIME */ ) {
       // we wait here
       char * input_request = zstr_recv( zmq_input_rep );
@@ -252,14 +254,14 @@ int main( int argc, char *argv[] ) {
 	} else if ( event.type == SDL_MOUSEMOTION ) {
 	  SDL_MouseMotionEvent * mev = (SDL_MouseMotionEvent*)&event;
 	  // + when manipulating an object, - when doing a first person view .. needs to be configurable?
-	  is.yaw -= is.yaw_sens * (float)mev->xrel;
+	  is.yaw += is.orientation_factor * is.yaw_sens * (float)mev->xrel;
 	  if ( is.yaw >= 0.0f ) {
 	    is.yaw = fmod( is.yaw + 180.0f, 360.0f ) - 180.0f;
 	  } else {
 	    is.yaw = fmod( is.yaw - 180.0f, 360.0f ) + 180.0f;
 	  }
 	  // + when manipulating an object, - when doing a first person view .. needs to be configurable?
-	  is.pitch -= is.pitch_sens * (float)mev->yrel;
+	  is.pitch += is.orientation_factor * is.pitch_sens * (float)mev->yrel;
 	  if ( is.pitch > 90.0f ) {
 	    is.pitch = 90.0f;
 	  } else if ( is.pitch < -90.0f ) {
@@ -304,6 +306,15 @@ int main( int argc, char *argv[] ) {
 	is.roll = rfRAngle.valueDegrees();
 
 	zstr_send( zmq_input_rep, "" ); // nop (acknowledge)
+      } else if ( strncmp( input_request, "config_look_around", strlen( "config_look_around" ) ) == 0 ) {
+	if ( atoi( input_request + strlen( "config_look_around" ) + 1 ) == 0 ) {
+	  printf( "input configuration: manipulate object\n" );
+	  is.orientation_factor = 1.0f;
+	} else {
+	  printf( "input configuration: look around\n" );
+	  is.orientation_factor = -1.0f;
+	}
+	zstr_send( zmq_input_rep, "" ); // nop
       } else {
 	zstr_send( zmq_input_rep, "" ); // nop
       }

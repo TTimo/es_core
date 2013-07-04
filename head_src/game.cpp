@@ -58,7 +58,7 @@ void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation, uint
   buttons = atoi( start );
 }
 
-void game_init( GameState & gs, SharedRenderState & rs ) {
+void game_init( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs ) {
   time_t now;
   time( &now );
   srandom( now ); 
@@ -73,6 +73,10 @@ void game_init( GameState & gs, SharedRenderState & rs ) {
   gs.rotation_speed = 0.0f;
   gs.orientation_index = 0;
   memset( gs.orientation_history, 0, sizeof( gs.orientation_history ) );
+  // set the input code to manipulate an object rather than look around
+  zstr_send( gsockets.zmq_input_req, "config_look_around 0" );
+  char * foo = zstr_recv( gsockets.zmq_input_req );
+  free( foo );
 }
 
 void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & srs, unsigned int now ) {

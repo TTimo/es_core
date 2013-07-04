@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 typedef struct GameState_s {
 } GameState;
 
-void game_init( GameState & gs, SharedRenderState & rs );
+void game_init( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs );
 void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs, unsigned int now );
 void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs );
 

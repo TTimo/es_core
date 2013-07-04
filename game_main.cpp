@@ -52,8 +52,6 @@ int game_thread( void * _parms ) {
   GameState gs;
   SharedRenderState srs;
 
-  game_init( gs, srs );
-
   gsockets.zmq_control_socket = zsocket_new( parms->zmq_context, ZMQ_PAIR );
   {
     int ret = zsocket_connect( gsockets.zmq_control_socket, "inproc://control_game" );
@@ -68,6 +66,8 @@ int game_thread( void * _parms ) {
     int ret = zsocket_connect( gsockets.zmq_input_req, "inproc://input" );
     assert( ret == 0 );
   }
+
+  game_init( gsockets, gs, srs );
 
   unsigned int baseline = SDL_GetTicks();
   int framenum = 0;
