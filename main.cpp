@@ -59,17 +59,17 @@ typedef struct InputState_s {
 void parse_orientation( char * start, Ogre::Quaternion & orientation ) {
   char * end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.w = atof( start );
+  orientation.w = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.x = atof( start );
+  orientation.x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.y = atof( start );
+  orientation.y = (float)atof( start );
   start = end + 1;
-  orientation.z = atof( start );
+  orientation.z = (float)atof( start );
 }
 
 void send_shutdown( void * zmq_render_socket, void * zmq_game_socket ) {

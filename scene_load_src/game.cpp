@@ -38,19 +38,19 @@ void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation, uint
   char * start = mouse_state;
   char * end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.w = atof( start );
+  orientation.w = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.x = atof( start );
+  orientation.x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.y = atof( start );
+  orientation.y = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.z = atof( start );
+  orientation.z = (float)atof( start );
   start = end + 1;
   buttons = atoi( start );
 }

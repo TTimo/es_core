@@ -70,7 +70,7 @@ int game_thread( void * _parms ) {
   game_init( gsockets, gs, srs );
 
   unsigned int baseline = SDL_GetTicks();
-  int framenum = 0;
+  unsigned int framenum = 0;
   while ( true ) {
     unsigned int now = SDL_GetTicks();
     unsigned int target_frame = ( now - baseline ) / GAME_DELAY;

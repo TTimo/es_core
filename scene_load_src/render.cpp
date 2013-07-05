@@ -44,19 +44,19 @@ void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation ) {
   char * start = mouse_state;
   char * end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.w = atof( start );
+  orientation.w = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.x = atof( start );
+  orientation.x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.y = atof( start );
+  orientation.y = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.z = atof( start );
+  orientation.z = (float)atof( start );
   // NOTE: skipping the button state
 }
 
@@ -111,13 +111,13 @@ void parse_render_state( RenderState & rs, SharedRenderState & srs, char * msg )
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  srs.position[0] = atof( start );
+  srs.position[0] = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  srs.position[1] = atof( start );
+  srs.position[1] = (float)atof( start );
   start = end + 1;
-  srs.position[2] = atof( start );  
+  srs.position[2] = (float)atof( start );  
 }
 
 void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, float ratio, SharedRenderState & previous_render, SharedRenderState & next_render ) {

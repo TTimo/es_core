@@ -43,7 +43,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>scene_load_src;..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -58,7 +58,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>scene_load_src;..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -70,14 +70,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="game.cpp" />
+    <ClCompile Include="game_main.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="render.cpp" />
+    <ClCompile Include="render_main.cpp" />
+    <ClCompile Include="scene_load_src\game.cpp" />
+    <ClCompile Include="scene_load_src\render.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="game.h" />
-    <ClInclude Include="game_render.h" />
-    <ClInclude Include="render.h" />
+    <ClInclude Include="game_main.h" />
+    <ClInclude Include="render_main.h" />
+    <ClInclude Include="scene_load_src\game.h" />
+    <ClInclude Include="scene_load_src\render.h" />
+    <ClInclude Include="scene_load_src\shared_render_state.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
