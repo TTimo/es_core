@@ -74,10 +74,28 @@ void parse_orientation( char * start, Ogre::Quaternion & orientation ) {
 
 void send_shutdown( void * zmq_render_socket, void * zmq_game_socket ) {
   zstr_send( zmq_render_socket, "stop" );
-  zstr_send( zmq_game_socket, "stop" );  
+  zstr_send( zmq_game_socket, "stop" );
 }
 
-void wait_shutdown( SDL_Thread * & sdl_render_thread, SDL_Thread * & sdl_game_thread ) {
+void wait_shutdown( SDL_Thread * & sdl_render_thread, SDL_Thread * & sdl_game_thread, void * zmq_input_rep ) {
+  // there is no timeout support in SDL_WaitThread, so we can only call it once we're sure the thread is going to finish
+  // the threads may do a few polls against the input thread before actually shutting down
+  // TODO: I'd like to come up with a more robust design:
+  // - thinking each thread should have a single select for all it's sockets, but that may not be practical
+  // - or add a control socket from each of these threads back to the main thread, so we can wait until the threads confirm that they are shutting down
+  // for now, loop the input thread for a bit to flush out any events
+  Uint32 continue_time = SDL_GetTicks() + 500; // an eternity
+  while ( SDL_GetTicks() < continue_time ) {
+    char * req = zstr_recv_nowait( zmq_input_rep );
+    if ( req != NULL ) {
+      delete( req );
+      // send a nop - that's assuming that all the code interacting with the input socket knows how to handle an empty response,
+      // which isn't the case, so the parsing code might crash .. still better than a hang
+      zstr_send( zmq_input_rep, "" );
+    } else {
+      SDL_Delay( 10 );
+    }
+  }
   {
     int status;
     SDL_WaitThread( sdl_render_thread, &status );
@@ -322,11 +340,10 @@ int main( int argc, char *argv[] ) {
     }
 
     if ( !shutdown_requested ) {
-      // NOTE: the game thread could still hang between the send and the wait if it issues a req/rep in between
       send_shutdown( zmq_render_socket, zmq_game_socket );
       shutdown_requested = true;
     }
-    wait_shutdown( sdl_render_thread, sdl_game_thread );
+    wait_shutdown( sdl_render_thread, sdl_game_thread, zmq_input_rep );
 
     zctx_destroy( &zmq_context );
     // make the GL context again before proceeding with the teardown
