@@ -79,7 +79,7 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
     printf( "loading model: %s\n", parms->argv[1] );
     model = scene->createEntity( "model", parms->argv[1] );
   } else {
-    model = scene->createEntity( "model", "render.mesh" );
+    model = scene->createEntity( "model", "uptown.mesh" );
   }
   model->setMaterialName( "es_core/flat" );
   Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
