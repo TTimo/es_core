@@ -44,19 +44,19 @@ void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation ) {
   char * start = mouse_state;
   char * end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.w = atof( start );
+  orientation.w = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.x = atof( start );
+  orientation.x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.y = atof( start );
+  orientation.y = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.z = atof( start );
+  orientation.z = (float)atof( start );
   // NOTE: skipping the button state
 }
 
@@ -68,37 +68,37 @@ void _parse_render_state( char * render_state, unsigned int & tick_time, float &
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  x = atof( start );
+  x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  y = atof( start );
+  y = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.w = atof( start );
+  orientation.w = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.x = atof( start );
+  orientation.x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.y = atof( start );
+  orientation.y = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.z = atof( start );
+  orientation.z = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  smoothed_angular.x = atof( start );
+  smoothed_angular.x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  smoothed_angular.y = atof( start );
+  smoothed_angular.y = (float)atof( start );
   start = end + 1;
-  smoothed_angular.z = atof( start );
+  smoothed_angular.z = (float)atof( start );
 }
 
 void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState & srs ) {

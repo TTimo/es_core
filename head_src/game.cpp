@@ -41,19 +41,19 @@ void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation, uint
   char * start = mouse_state;
   char * end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.w = atof( start );
+  orientation.w = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.x = atof( start );
+  orientation.x = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.y = atof( start );
+  orientation.y = (float)atof( start );
   start = end + 1;
   end = strchr( start, ' ' );
   end[0] = '\0';
-  orientation.z = atof( start );
+  orientation.z = (float)atof( start );
   start = end + 1;
   buttons = atoi( start );
 }
@@ -61,10 +61,10 @@ void parse_mouse_state( char * mouse_state, Ogre::Quaternion & orientation, uint
 void game_init( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs ) {
   time_t now;
   time( &now );
-  srandom( now ); 
+  srandom( (unsigned int)now ); 
   gs.bounce = 25.0f;
-  gs.speed = rand() % 60 + 40;
-  float angle = (float)( rand() % 360 ) * 2.0f * M_PI / 360.0f;
+  gs.speed = (float)( rand() % 60 + 40 );
+  float angle = (float)( rand() % 360 ) * 2.0f * (float)M_PI / 360.0f;
   gs.direction = Ogre::Vector2( cosf( angle ), sinf( angle ) );
   rs.orientation = Ogre::Quaternion( Ogre::Radian( 0.0f ), Ogre::Vector3::UNIT_Z );
   rs.position = Ogre::Vector3::ZERO;
