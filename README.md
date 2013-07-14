@@ -17,23 +17,11 @@ ZeroMQ provides a safe and efficient abstraction for thread communication. For m
 
 The game thread runs on a fixed tick and feeds an interpolating renderer locked at the display refresh speed. On each tick, the game thread updates it's internal state and produces a new render state for the renderer to interpolate towards. For more details on this approach, see 'Fix your timestep!' by Glenn Fiedler [2].
 
-Demo
-====
+Demo applications
+=================
 
-The demo is a simple head bouncing in front of the camera, which can be spun around by mouse drags. It highlights the major aspects of the architecture, and provides a starting point that is easy to replace by your own design.
-
-There are a few limitations for simplicity right now. The renderer runs at the vertical refresh speed, and there is no toggle to go fullscreen. If you run from the console some simple statistics showing the game thread scheduling and the renderer interpolation will print out.
-
-Binaries are provided for MacOS X, Windows and GNU/Linux.
-You can them directly at https://s3.amazonaws.com/es_core/es_core.binaries.zip [4], or run them from a git clone.
-
-If running from git, make sure to run from the binaries/ folder so the executable finds the sample media.
-
-On Windows you will need the Visual C++ Redistributable for Visual Studio 2012 installed, which you can obtain from http://www.microsoft.com/en-us/download/details.aspx?id=30679 (vcredist_x86.exe)
-
-The GNU/Linux binaries were compiled for x86_64 on a Debian Sid system. No work has been done towards making them binary compatible with a broader range of GNU/Linux distributions yet. Fortunately compiling on GNU/Linux is the easiest, so go ahead and do that if the binaries don't work.
-
-The MacOS X binaries will run fine on an OSX 10.8 system, but more work is needed for compatibility with older releases.
+See binaries/README.md for a summary of the applications provided for testing and demo purposes.
+You can download the latest set of compile binaries from https://s3.amazonaws.com/es_core/es_core.binaries.zip [4].
 
 Compile
 =======
