@@ -103,8 +103,6 @@ int render_thread( void * _parms ) {
 	break;
       }
 
-      // TODO: previous_render_time, next_render_time housekeeping
-
       srs_index ^= 1;
       parse_render_state( rs, srs[ srs_index ], game_tick );
 

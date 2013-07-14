@@ -33,7 +33,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "game.h"
 
 void game_init( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs ) { }
-void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs, unsigned int now ) { }
+void game_tick( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & rs, unsigned int now ) {
+  // keep pumping the inputs - that way the esc key is detected and the template can at least be closed easily
+  zstr_send( gsockets.zmq_input_req, "mouse_state" );
+  char * mouse_state = zstr_recv( gsockets.zmq_input_req );
+  free( mouse_state );
+}
 
 void emit_render_state( void * socket, unsigned int time, SharedRenderState & rs ) {
   zstr_sendf( socket, "%d", time );
