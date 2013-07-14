@@ -39,7 +39,8 @@ Bundled assets
 media/ is a smaller version of Ogre 1.8's Samples/Media/, copied here for easier distribution of binaries.
 For more information, see https://bitbucket.org/sinbad/ogre/src/cf06d4ed07933c23985037182937139f56f15015/Samples/Media/?at=v1-8
 
-media/models/uptown.mesh is a conversion of Urban Terror's map 'uptown' to Ogre's mesh format, distributed with permission from FrozenSand
+media/models/uptown.mesh is a conversion of Urban Terror's map 'uptown' to Ogre's mesh format, distributed with permission from FrozenSand.
+Authors may not use this level as a base to build additional levels.
 For more information, see http://www.urbanterror.info/
 
 References
