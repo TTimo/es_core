@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OgreViewport.h"
 #include "OgreEntity.h"
 #include "OgreManualObject.h"
+#include "OgreBspSceneManager.h"
 
 #include "czmq.h"
 
@@ -71,9 +72,16 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 
   mgr.initialiseAllResourceGroups();
 
+#if 0
   Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
+#else
+  parms->root->loadPlugin( "Plugin_BSPSceneManager.so" );
+  Ogre::BspSceneManager * scene = static_cast<Ogre::BspSceneManager *>( parms->root->createSceneManager( "BspSceneManager" ) );
+  scene->setWorldGeometry( "ut4_uptown.bsp" );
+#endif
   // this modulates the material's ambient value .. edit the material
   scene->setAmbientLight( Ogre::ColourValue( 1.0f, 1.0f, 1.0f ) );
+#if 0
   Ogre::Entity * model;
   if ( parms->argc > 1 ) {
     printf( "loading model: %s\n", parms->argv[1] );
@@ -88,6 +96,7 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   // put the model in the ZX plane
   node->setPosition( Ogre::Vector3::ZERO );
   node->pitch( Ogre::Radian( Ogre::Degree( 90.0f ) ), Ogre::Node::TS_WORLD );
+#endif
 
   rs.light = scene->createLight( "light" );
   rs.light->setType( Ogre::Light::LT_DIRECTIONAL );
@@ -95,7 +104,6 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   rs.light->setDiffuseColour( 0.6f, 0.6f, 0.6f );
 
   rs.camera = scene->createCamera( "cam" );
-
   rs.camera->setNearClipDistance( 5 );
 
   Ogre::Viewport * viewport = parms->ogre_window->addViewport( rs.camera );
@@ -126,11 +134,30 @@ void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, f
   Ogre::Quaternion o;
   parse_mouse_state( mouse_state, o );
   free( mouse_state );
+
+#if 1
+  Ogre::Vector3 right( 0.0f, 0.0f, 1.0f );
+  Ogre::Vector3 up( 1.0f, 0.0f, 0.0f );
+  Ogre::Vector3 direction( 0.0f, -1.0f, 0.0f );
+  Ogre::Quaternion q;
+  q.FromAxes( right, up, direction );
+  Ogre::Matrix3 m;
+  q.ToRotationMatrix( m );
+
+  o = q * o;
   rs.camera->setOrientation( o );
+#else
+  rs.camera->setOrientation( o );
+#endif
   
   // with the flat shader and the directional this helps looking at the geometry
   rs.light->setDirection( rs.camera->getDirection() );
 
   Ogre::Vector3 v = ( 1.0f - ratio ) * previous_render.position + ratio * next_render.position;
+
+#if 1
+  v = m * v;
+#endif
+
   rs.camera->setPosition( v );
 }

@@ -19,6 +19,7 @@ env.ParseConfig( '%s --cflags --libs' % SDL2_CONFIG )
 
 env.Append( CPPPATH = os.path.join( OGRE_SRC, 'include' ) )
 env.Append( CPPPATH = os.path.join( OGRE_SRC, 'OgreMain/include' ) )
+env.Append( CPPPATH = os.path.join( OGRE_SRC, 'PlugIns/BSPSceneManager/include' ) )
 
 source = [ 'main.cpp', 'render_main.cpp', 'game_main.cpp' ]
 
