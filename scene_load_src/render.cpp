@@ -70,6 +70,20 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   mgr.addResourceLocation( "media/materials/textures", "FileSystem", "General" );
   mgr.addResourceLocation( "media/materials/programs", "FileSystem", "General" );
 
+#if 1
+  for ( int i = 1; i <= 21; i++ ) {
+    char pak[2048];
+    sprintf( pak, "/usr/local/games/UrT42/q3ut4/zUrT42_00%02d.pk3", i );
+    printf( pak );
+    printf( "\n" );
+    mgr.addResourceLocation(
+			  pak,
+			  "Zip",
+			  "General",
+			  true );
+  }
+#endif
+
   mgr.initialiseAllResourceGroups();
 
 #if 0
@@ -77,7 +91,7 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 #else
   parms->root->loadPlugin( "Plugin_BSPSceneManager.so" );
   Ogre::BspSceneManager * scene = static_cast<Ogre::BspSceneManager *>( parms->root->createSceneManager( "BspSceneManager" ) );
-  scene->setWorldGeometry( "ut4_uptown.bsp" );
+  scene->setWorldGeometry( "maps/ut4_uptown.bsp" );
 #endif
   // this modulates the material's ambient value .. edit the material
   scene->setAmbientLight( Ogre::ColourValue( 1.0f, 1.0f, 1.0f ) );
