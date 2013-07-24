@@ -70,26 +70,33 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   mgr.addResourceLocation( "media/materials/textures", "FileSystem", "General" );
   mgr.addResourceLocation( "media/materials/programs", "FileSystem", "General" );
 
+  for ( int i = 1; i <= 21; i++ ) {
+    char pak[2048];
+#ifdef __APPLE__
+    sprintf( pak, "/Users/timo/UrT/UrT42/q3ut4/zUrT42_00%02d.pk3", i );
+#else
+    sprintf( pak, "/usr/local/games/UrT42/q3ut4/zUrT42_00%02d.pk3", i );
+#endif
+    printf( "%s\n", pak );
+    mgr.addResourceLocation(
+			  pak,
+			  "Zip",
+			  "General",
+			  true );
+  }
+
   mgr.initialiseAllResourceGroups();
 
-  Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
+#ifdef __APPLE__
+  parms->root->loadPlugin( "Plugin_BSPSceneManager" );
+#else
+  parms->root->loadPlugin( "Plugin_BSPSceneManager.so" );
+#endif
+  Ogre::BspSceneManager * scene = static_cast<Ogre::BspSceneManager *>( parms->root->createSceneManager( "BspSceneManager" ) );
+  scene->setWorldGeometry( "maps/ut4_uptown.bsp" );
+
   // this modulates the material's ambient value .. edit the material
   scene->setAmbientLight( Ogre::ColourValue( 1.0f, 1.0f, 1.0f ) );
-
-  Ogre::Entity * model;
-  if ( parms->argc > 1 ) {
-    printf( "loading model: %s\n", parms->argv[1] );
-    model = scene->createEntity( "model", parms->argv[1] );
-  } else {
-    model = scene->createEntity( "model", "uptown.mesh" );
-  }
-  model->setMaterialName( "es_core/flat" );
-  Ogre::SceneNode * node = scene->getRootSceneNode()->createChildSceneNode( "model_node" );
-  node->attachObject( model );
-
-  // put the model in the ZX plane
-  node->setPosition( Ogre::Vector3::ZERO );
-  node->pitch( Ogre::Radian( Ogre::Degree( 90.0f ) ), Ogre::Node::TS_WORLD );
 
   rs.light = scene->createLight( "light" );
   rs.light->setType( Ogre::Light::LT_DIRECTIONAL );
@@ -128,12 +135,21 @@ void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, f
   parse_mouse_state( mouse_state, o );
   free( mouse_state );
 
+  Ogre::Vector3 right( 0.0f, 0.0f, 1.0f );
+  Ogre::Vector3 up( 1.0f, 0.0f, 0.0f );
+  Ogre::Vector3 direction( 0.0f, -1.0f, 0.0f );
+  Ogre::Quaternion q;
+  q.FromAxes( right, up, direction );
+  Ogre::Matrix3 m;
+  q.ToRotationMatrix( m );
+
+  o = q * o;
   rs.camera->setOrientation( o );
   
   // with the flat shader and the directional this helps looking at the geometry
   rs.light->setDirection( rs.camera->getDirection() );
 
   Ogre::Vector3 v = ( 1.0f - ratio ) * previous_render.position + ratio * next_render.position;
-
+  v = m * v;
   rs.camera->setPosition( v );
 }

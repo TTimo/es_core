@@ -57,3 +57,8 @@ head_env = env.Clone()
 head_env.Append( CPPPATH = [ 'head_src' ] )
 head_env.VariantDir( 'build/head_src', '.' )
 head = head_env.Program( 'head', [ os.path.join( 'build/head_src', s ) for s in source + [ 'head_src/game.cpp', 'head_src/render.cpp' ] ] )
+
+bsp_env = env.Clone()
+bsp_env.Append( CPPPATH = [ 'bsp_src' ] )
+bsp_env.VariantDir( 'build/bsp_src', '.' )
+bsp = bsp_env.Program( 'bsp', [ os.path.join( 'build/bsp_src', s ) for s in source + [ 'bsp_src/game.cpp', 'bsp_src/render.cpp' ] ] )
