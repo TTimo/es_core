@@ -25,6 +25,9 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <string>
+#include <list>
+
 #include "SDL.h"
 
 #include "OgreRoot.h"
@@ -70,20 +73,30 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   mgr.addResourceLocation( "media/materials/textures", "FileSystem", "General" );
   mgr.addResourceLocation( "media/materials/programs", "FileSystem", "General" );
 
-  for ( int i = 1; i <= 21; i++ ) {
-    char pak[2048];
-#ifdef __APPLE__
-    sprintf( pak, "/Users/timo/UrT/UrT42/q3ut4/zUrT42_00%02d.pk3", i );
-#else
-    sprintf( pak, "/usr/local/games/UrT42/q3ut4/zUrT42_00%02d.pk3", i );
-#endif
-    printf( "%s\n", pak );
-    mgr.addResourceLocation(
-			  pak,
-			  "Zip",
-			  "General",
-			  true );
+  if ( parms->argc < 3 ) {
+    // NOTE: we need an abort (in the control socket protocol)
+    printf( "usage: bsp <pk3 dir> <bsp name>\n" );
+    return;
   }
+
+  printf( "scan %s\n", parms->argv[1] );
+  DIR * dir = opendir( parms->argv[1] );
+  dirent * entry;
+  std::list<std::string> pak_names;
+  while ( ( entry = readdir( dir ) ) != NULL ) {
+    if ( strcasecmp( entry->d_name + strlen( entry->d_name ) - 4, ".pk3" ) != 0 ) {
+      continue;
+    }
+    pak_names.push_back( entry->d_name );
+  }
+  pak_names.sort();
+  for ( std::list<std::string>::iterator i = pak_names.begin(), e = pak_names.end(); i != e; ++i ) {
+    printf( " add: %s\n", i->c_str() );
+    char pak[2048];
+    sprintf( pak, "%s/%s", parms->argv[1], i->c_str() );
+    mgr.addResourceLocation( pak, "Zip", "General", true );
+  }
+  closedir( dir );
 
   mgr.initialiseAllResourceGroups();
 
@@ -93,7 +106,8 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   parms->root->loadPlugin( "Plugin_BSPSceneManager.so" );
 #endif
   Ogre::BspSceneManager * scene = static_cast<Ogre::BspSceneManager *>( parms->root->createSceneManager( "BspSceneManager" ) );
-  scene->setWorldGeometry( "maps/ut4_uptown.bsp" );
+  printf( "loading bsp: %s\n", parms->argv[2] );
+  scene->setWorldGeometry( parms->argv[2] );
 
   // this modulates the material's ambient value .. edit the material
   scene->setAmbientLight( Ogre::ColourValue( 1.0f, 1.0f, 1.0f ) );
