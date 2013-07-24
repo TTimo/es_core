@@ -24,7 +24,7 @@ env.Append( CPPPATH = os.path.join( OGRE_SRC, 'PlugIns/BSPSceneManager/include' 
 source = [ 'main.cpp', 'render_main.cpp', 'game_main.cpp' ]
 
 if ( system == 'Darwin' ):
-    env.Append( CCFLAGS = [ '-arch', 'x86_64', '-mmacosx-version-min=10.6' ] )
+    env.Append( CCFLAGS = [ '-arch', 'x86_64', ] )
     env.Append( CPPPATH = os.path.join( OGRE_SRC, 'RenderSystems/GL/include' ) )
     env.Append( CPPPATH = os.path.join( OGRE_SRC, 'RenderSystems/GL/include/OSX' ) )
     env.Append( CPPPATH = '/opt/local/include' ) # boost, zmq etc.
@@ -32,7 +32,7 @@ if ( system == 'Darwin' ):
     env.Append( FRAMEWORKS = [ 'Ogre', 'Foundation', 'AppKit' ] )
     env.Append( LIBS = [ 'czmq', 'zmq' ] )
     env.Append( LIBPATH = '/opt/local/lib' )
-    env.Append( LINKFLAGS = [ '-headerpad_max_install_names', '-mmacosx-version-min=10.6' ] )
+    env.Append( LINKFLAGS = [ '-headerpad_max_install_names', ] )
     source.append( 'OSX_wrap.mm' )
 else:
     env.Append( LIBS = 'OgreMain' )
@@ -57,21 +57,3 @@ head_env = env.Clone()
 head_env.Append( CPPPATH = [ 'head_src' ] )
 head_env.VariantDir( 'build/head_src', '.' )
 head = head_env.Program( 'head', [ os.path.join( 'build/head_src', s ) for s in source + [ 'head_src/game.cpp', 'head_src/render.cpp' ] ] )
-
-# FIXME: the OSX build and binary distribution strategy needs redone
-#if ( system == 'Darwin' ):
-#
-#    def bundle_up( target, source, env ):
-#        # point to the bundled libraries
-#        # see http://blog.onesadcookie.com/2008/01/installname-magic.html
-#        # this is specific to my setup atm, the logic could be made more generic though
-#        def check_call( cmd ):
-#            print( cmd )
-#            subprocess.check_call( cmd, shell = True )
-#        map( check_call, [
-#            'cp "%s" "%s"' % ( source[0], target[0] ),
-#            './binaries/dylibbundler -od -b -d binaries/core.app/Contents/libs -x binaries/core.app/Contents/MacOS/core',
-#            ] )
-#
-#    # NOTE: not in the default target list, invoke 'scons binaries/core.app/Contents/MacOS/core' to update it
-#    bundle_core = env.Command( 'binaries/core.app/Contents/MacOS/core', core, Action( bundle_up ) )

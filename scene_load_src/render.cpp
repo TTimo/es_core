@@ -73,9 +73,12 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 #if 1
   for ( int i = 1; i <= 21; i++ ) {
     char pak[2048];
+#ifdef __APPLE__
+    sprintf( pak, "/Users/timo/UrT/UrT42/q3ut4/zUrT42_00%02d.pk3", i );
+#else
     sprintf( pak, "/usr/local/games/UrT42/q3ut4/zUrT42_00%02d.pk3", i );
-    printf( pak );
-    printf( "\n" );
+#endif
+    printf( "%s\n", pak );
     mgr.addResourceLocation(
 			  pak,
 			  "Zip",
@@ -89,7 +92,12 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
 #if 0
   Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
 #else
+
+#ifdef __APPLE__
+  parms->root->loadPlugin( "Plugin_BSPSceneManager" );
+#else
   parms->root->loadPlugin( "Plugin_BSPSceneManager.so" );
+#endif
   Ogre::BspSceneManager * scene = static_cast<Ogre::BspSceneManager *>( parms->root->createSceneManager( "BspSceneManager" ) );
   scene->setWorldGeometry( "maps/ut4_uptown.bsp" );
 #endif
