@@ -4,16 +4,20 @@ import os, platform, subprocess
 
 ( system, node, release, version, machine, processor ) = platform.uname()
 
+tools = [ 'default', ]
+
 if ( system == 'Darwin' ):
+    import macosx
+    tools.append( macosx.TOOL_BUNDLE )
     SDL2_CONFIG = '/Users/timo/SDL/autocrap.install/bin/sdl2-config'
     OGRE_SRC = '/Users/timo/ogre'
 else:
     SDL2_CONFIG = '/home/timo/SDL/install/bin/sdl2-config'
     OGRE_SRC = '/home/timo/ogre'
 
-env = Environment( ENV = os.environ )
+env = Environment( ENV = os.environ, tools = tools )
 
-env.Append( CCFLAGS = [ '-g', ] ) # '-O4' ] )
+env.Append( CCFLAGS = [ '-g', ] )
 
 env.ParseConfig( '%s --cflags --libs' % SDL2_CONFIG )
 
@@ -62,3 +66,12 @@ bsp_env = env.Clone()
 bsp_env.Append( CPPPATH = [ 'bsp_src' ] )
 bsp_env.VariantDir( 'build/bsp_src', '.' )
 bsp = bsp_env.Program( 'bsp', [ os.path.join( 'build/bsp_src', s ) for s in source + [ 'bsp_src/game.cpp', 'bsp_src/render.cpp' ] ] )
+# does not do shit ?
+bsp_env[ 'VERSION_NUM' ] = '1'
+bsp_env[ 'VERSION_NAME' ] = 'bsp.app'
+bsp_bundle = bsp_env.MakeBundle( 'bsp.app',
+                                 bsp,
+                                 'net.ttimo.es_core.bsp',
+                                 'Info.plist',
+                                 'APPL',
+)
