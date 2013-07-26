@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="bsp_src\game.cpp" />
+    <ClCompile Include="bsp_src\render.cpp" />
+    <ClCompile Include="game_main.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="render_main.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bsp_src\game.h" />
+    <ClInclude Include="bsp_src\render.h" />
+    <ClInclude Include="bsp_src\shared_render_state.h" />
+    <ClInclude Include="game_main.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="render_main.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{3728eb78-eb7a-49a6-87e7-6e3047ea2a40}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
