@@ -81,8 +81,6 @@ void parse_kb_state( char * kb_state, uint8_t & w, uint8_t & a, uint8_t & s, uin
 }
 
 void game_init( GameThreadSockets & gsockets, GameState & gs, SharedRenderState & srs ) {
-  // decent vantage point in barcelona
-  //  srs.position = Ogre::Vector3( 4000.0f, 4000.0f, -3000.0f );
   srs.position = Ogre::Vector3::ZERO;
 }
 

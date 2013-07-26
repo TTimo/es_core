@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "czmq.h"
 
 #ifdef __APPLE__
+  #include <syslog.h>
   #include "OSX_wrap.h"
 #endif
 

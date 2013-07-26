@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OgreViewport.h"
 #include "OgreEntity.h"
 #include "OgreManualObject.h"
+#include "OgreBspSceneManager.h"
 
 #include "czmq.h"
 
@@ -74,6 +75,7 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   Ogre::SceneManager * scene = parms->root->createSceneManager( Ogre::ST_GENERIC, "SimpleStaticCheck" );
   // this modulates the material's ambient value .. edit the material
   scene->setAmbientLight( Ogre::ColourValue( 1.0f, 1.0f, 1.0f ) );
+
   Ogre::Entity * model;
   if ( parms->argc > 1 ) {
     printf( "loading model: %s\n", parms->argv[1] );
@@ -95,7 +97,6 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   rs.light->setDiffuseColour( 0.6f, 0.6f, 0.6f );
 
   rs.camera = scene->createCamera( "cam" );
-
   rs.camera->setNearClipDistance( 5 );
 
   Ogre::Viewport * viewport = parms->ogre_window->addViewport( rs.camera );
@@ -126,11 +127,13 @@ void interpolate_and_render( RenderThreadSockets & rsockets, RenderState & rs, f
   Ogre::Quaternion o;
   parse_mouse_state( mouse_state, o );
   free( mouse_state );
+
   rs.camera->setOrientation( o );
   
   // with the flat shader and the directional this helps looking at the geometry
   rs.light->setDirection( rs.camera->getDirection() );
 
   Ogre::Vector3 v = ( 1.0f - ratio ) * previous_render.position + ratio * next_render.position;
+
   rs.camera->setPosition( v );
 }
