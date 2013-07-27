@@ -18,8 +18,10 @@ The rendering is a flat shaded material, this is meant to facilitate examining g
 bsp.exe
 -------
 
-This will load an idTech3 .bsp file. It can look in zip-format .pk3 files and load textures as well. You need to pass two parameters on the command line, the location of the pk3 files and the name of the bsp file. For instance:
-$ ./bsp /usr/local/games/quake3/baseq3 maps/q3dm13.bsp
+This will load an idTech3 .bsp file. It can look in zip-format .pk3 files and load textures as well. You need to pass two parameters on the command line, the location of the pk3 files and the name of the bsp file.
+
+Example:
+bsp.exe C:\Quake3\baseq3 maps/q3dm13.bsp
 
 template.exe
 ------------
