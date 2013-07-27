@@ -80,15 +80,30 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
   }
 
   printf( "scan %s\n", parms->argv[1] );
+  std::list<std::string> pak_names;
+#ifdef __WINDOWS__
+  HANDLE hFind;
+  WIN32_FIND_DATA FindFileData;
+  char search[2048];
+  sprintf( search, "%s/%s", parms->argv[1], "/*.pk3" );
+  hFind = FindFirstFile( search, &FindFileData );
+  assert( hFind != INVALID_HANDLE_VALUE );
+  do {
+    printf( "%s\n", FindFileData.cFileName );
+    pak_names.push_back( FindFileData.cFileName );
+  } while( FindNextFile( hFind, &FindFileData ) );
+  FindClose( hFind );
+#else
   DIR * dir = opendir( parms->argv[1] );
   dirent * entry;
-  std::list<std::string> pak_names;
   while ( ( entry = readdir( dir ) ) != NULL ) {
     if ( strcasecmp( entry->d_name + strlen( entry->d_name ) - 4, ".pk3" ) != 0 ) {
       continue;
     }
     pak_names.push_back( entry->d_name );
   }
+  closedir( dir );
+#endif
   pak_names.sort();
   for ( std::list<std::string>::iterator i = pak_names.begin(), e = pak_names.end(); i != e; ++i ) {
     printf( " add: %s\n", i->c_str() );
@@ -96,14 +111,13 @@ void render_init( RenderThreadParms * parms, RenderState & rs, SharedRenderState
     sprintf( pak, "%s/%s", parms->argv[1], i->c_str() );
     mgr.addResourceLocation( pak, "Zip", "General", true );
   }
-  closedir( dir );
 
   mgr.initialiseAllResourceGroups();
 
-#ifdef __APPLE__
-  parms->root->loadPlugin( "Plugin_BSPSceneManager" );
-#else
+#ifdef __LINUX__
   parms->root->loadPlugin( "Plugin_BSPSceneManager.so" );
+#else
+  parms->root->loadPlugin( "Plugin_BSPSceneManager" );
 #endif
   Ogre::BspSceneManager * scene = static_cast<Ogre::BspSceneManager *>( parms->root->createSceneManager( "BspSceneManager" ) );
   printf( "loading bsp: %s\n", parms->argv[2] );

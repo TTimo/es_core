@@ -32,7 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OgreViewport.h"
 #include "OgreEntity.h"
 #include "OgreManualObject.h"
-#include "OgreBspSceneManager.h"
 
 #include "czmq.h"
 
