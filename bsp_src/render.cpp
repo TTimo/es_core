@@ -28,6 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <list>
 
+#include "czmq.h"
+
 #include "SDL.h"
 
 #include "OgreRoot.h"
@@ -36,8 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OgreEntity.h"
 #include "OgreManualObject.h"
 #include "OgreBspSceneManager.h"
-
-#include "czmq.h"
 
 #include "../render_main.h"
 

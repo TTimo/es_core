@@ -25,13 +25,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "czmq.h"
+
 #include "SDL.h"
 #include "SDL_thread.h"
 #include "SDL_syswm.h"
 
 #include "OgreRoot.h"
-
-#include "czmq.h"
 
 #ifdef __APPLE__
 #include <sys/stat.h>

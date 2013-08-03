@@ -29,13 +29,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <time.h>
 #include <math.h>
 
+#include "czmq.h"
+
 #include "SDL.h"
 #include "SDL_thread.h"
 
 #include "OgreVector2.h"
 #include "OgreVector3.h"
-
-#include "czmq.h"
 
 // includes common to all projects
 #include "game_main.h"

@@ -25,6 +25,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "czmq.h"
+
 #include "SDL.h"
 #include "SDL_opengl.h"
 #include "SDL_syswm.h"
@@ -36,8 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
-
-#include "czmq.h"
 
 #ifdef __APPLE__
   #include <syslog.h>
