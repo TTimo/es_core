@@ -48,7 +48,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>scene_load_src;..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>scene_load_src;..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\ogre\Build\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,7 +63,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>scene_load_src;..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>scene_load_src;..\czmq\include;..\libzmq\include;..\ogre\OgreMain\include;..\ogre\include;..\ogre\Build\include;..\SDL\src\video\windows;..\SDL\src\video;..\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
