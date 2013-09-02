@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 cmake_policy( SET CMP0007 NEW ) # this one it actually complained
 
-# NOTE: we assume that CMAKE_INSTALL_PREFIX is setup, and that all the dependencies are installed there already
+# NOTE: we assume that CMAKE_INSTALL_PREFIX is provided, and that all the dependencies are installed there already
 
 project( es_core )
 
@@ -17,7 +17,7 @@ link_directories( "${CMAKE_INSTALL_PREFIX}/lib" )
 include_directories( ${OGRE_INCLUDE_DIRS} )
 
 # NOTE: under the assumption that all the es_core dependencies are getting installed to the same prefix,
-# the above has defined all the includes and library directories needed for ZeroMQ
+# the above has defined all the header and library directories needed for ZeroMQ
 
 # BSP -----------------
 
