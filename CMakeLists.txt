@@ -21,22 +21,31 @@ include_directories( ${OGRE_INCLUDE_DIRS} )
 
 # BSP -----------------
 
-add_executable( bsp main.cpp game_main.cpp render_main.cpp bsp_src/game.cpp bsp_src/render.cpp )
+list( APPEND BSP_SOURCES main.cpp game_main.cpp render_main.cpp bsp_src/game.cpp bsp_src/render.cpp )
+if ( APPLE )
+  list( APPEND BSP_SOURCES OSX_wrap.mm )
+endif ( APPLE )
+add_executable( bsp ${BSP_SOURCES} )
 get_target_property( BSP_INCLUDES bsp INCLUDE_DIRECTORIES )
 # FIXME: fix ogre cmake so it sets this up properly instead of digging it up ourselves
 #pkg_message( BSP "BSP: ${OGRE_Plugin_BSPSceneManager_INCLUDE_DIR}" )
 list( APPEND BSP_INCLUDES "${CMAKE_INSTALL_PREFIX}/include/OGRE/Plugins/BSPSceneManager" )
 list( APPEND BSP_INCLUDES "${CMAKE_SOURCE_DIR}/bsp_src" )
+if ( APPLE )
+  list( APPEND BSP_INCLUDES "${CMAKE_INSTALL_PREFIX}/include/OGRE/RenderSystems/GL" )
+  list( APPEND BSP_INCLUDES "${CMAKE_INSTALL_PREFIX}/include/OGRE/RenderSystems/GL/OSX" )
+endif ( APPLE )
 set_property( TARGET bsp PROPERTY INCLUDE_DIRECTORIES ${BSP_INCLUDES} )
 target_link_libraries( bsp czmq zmq )
 target_link_libraries( bsp SDL2 )
 target_link_libraries( bsp ${OGRE_LIBRARIES} )
 
-# FIXME: APPLE
 if ( APPLE )
   find_library( FOUNDATION_FRAMEWORK Foundation )
   find_library( APPKIT_FRAMEWORK AppKit )
-  target_link_libraries( bsp ${FOUNDATION_FRAMEWORK} ${APPKIT_FRAMEWORK} )
+  find_library( IOKIT_FRAMEWORK IOKit )
+  find_library( FF_FRAMEWORK ForceFeedback )
+  target_link_libraries( bsp ${FOUNDATION_FRAMEWORK} ${APPKIT_FRAMEWORK} ${IOKIT_FRAMEWORK} ${FF_FRAMEWORK} )
 endif ( APPLE )
 
 # HEAD ----------------
