@@ -41,12 +41,15 @@ target_link_libraries( bsp SDL2 )
 target_link_libraries( bsp ${OGRE_LIBRARIES} )
 
 if ( APPLE )
+  set_target_properties( bsp PROPERTIES MACOSX_BUNDLE TRUE )
   find_library( FOUNDATION_FRAMEWORK Foundation )
   find_library( APPKIT_FRAMEWORK AppKit )
   find_library( IOKIT_FRAMEWORK IOKit )
   find_library( FF_FRAMEWORK ForceFeedback )
   target_link_libraries( bsp ${FOUNDATION_FRAMEWORK} ${APPKIT_FRAMEWORK} ${IOKIT_FRAMEWORK} ${FF_FRAMEWORK} )
 endif ( APPLE )
+
+install( TARGETS bsp BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" )
 
 # HEAD ----------------
 
@@ -67,12 +70,15 @@ target_link_libraries( head SDL2 )
 target_link_libraries( head ${OGRE_LIBRARIES} )
 
 if ( APPLE )
+  set_target_properties( head PROPERTIES MACOSX_BUNDLE TRUE )
   find_library( FOUNDATION_FRAMEWORK Foundation )
   find_library( APPKIT_FRAMEWORK AppKit )
   find_library( IOKIT_FRAMEWORK IOKit )
   find_library( FF_FRAMEWORK ForceFeedback )
   target_link_libraries( head ${FOUNDATION_FRAMEWORK} ${APPKIT_FRAMEWORK} ${IOKIT_FRAMEWORK} ${FF_FRAMEWORK} )
 endif ( APPLE )
+
+install( TARGETS head BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" )
 
 # SCENE ---------------
 
@@ -93,12 +99,15 @@ target_link_libraries( scene SDL2 )
 target_link_libraries( scene ${OGRE_LIBRARIES} )
 
 if ( APPLE )
+  set_target_properties( scene PROPERTIES MACOSX_BUNDLE TRUE )
   find_library( FOUNDATION_FRAMEWORK Foundation )
   find_library( APPKIT_FRAMEWORK AppKit )
   find_library( IOKIT_FRAMEWORK IOKit )
   find_library( FF_FRAMEWORK ForceFeedback )
   target_link_libraries( scene ${FOUNDATION_FRAMEWORK} ${APPKIT_FRAMEWORK} ${IOKIT_FRAMEWORK} ${FF_FRAMEWORK} )
 endif ( APPLE )
+
+install( TARGETS scene BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" )
 
 # TEMPLATE ------------
 
@@ -119,9 +128,12 @@ target_link_libraries( template SDL2 )
 target_link_libraries( template ${OGRE_LIBRARIES} )
 
 if ( APPLE )
+  set_target_properties( template PROPERTIES MACOSX_BUNDLE TRUE )
   find_library( FOUNDATION_FRAMEWORK Foundation )
   find_library( APPKIT_FRAMEWORK AppKit )
   find_library( IOKIT_FRAMEWORK IOKit )
   find_library( FF_FRAMEWORK ForceFeedback )
   target_link_libraries( template ${FOUNDATION_FRAMEWORK} ${APPKIT_FRAMEWORK} ${IOKIT_FRAMEWORK} ${FF_FRAMEWORK} )
 endif ( APPLE )
+
+install( TARGETS template BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" )
