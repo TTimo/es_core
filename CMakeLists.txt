@@ -111,7 +111,7 @@ install( TARGETS scene BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" )
 
 # TEMPLATE ------------
 
-list( APPEND TEMPLATE_SCOURES main.cpp game_main.cpp render_main.cpp template_src/game.cpp template_src/render.cpp )
+list( APPEND TEMPLATE_SOURCES main.cpp game_main.cpp render_main.cpp template_src/game.cpp template_src/render.cpp )
 if ( APPLE )
    list( APPEND TEMPLATE_SOURCES OSX_wrap.mm )
 endif ( APPLE )
