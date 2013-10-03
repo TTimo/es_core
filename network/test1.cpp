@@ -12,14 +12,9 @@ public:
   LocalSimpleRemotePeer() : v(0.0f), read_ready(false) { }
 
   /*
-   * Internal
+   * SimpleRemotePeer
    */
 
-  void DoTransport( SimpleRemotePeer &remote ) {
-    // mimics what happens if two peers actually talk to each other (across threads, TCP, UDP etc.)
-    remote.WriteFloat( v );
-    read_ready = false;
-  }
   void WriteFloat( float & _v ) {
     assert( !read_ready ); // means the previous write value would be squashed without ever being read
     v = _v;
@@ -33,6 +28,17 @@ public:
     read_ready = false;
     return true;
   }
+
+  /*
+   * Internal
+   */
+
+  void DoTransport( SimpleRemotePeer &remote ) {
+    // mimics what happens if two peers actually talk to each other (across threads, TCP, UDP etc.)
+    remote.WriteFloat( v );
+    read_ready = false;
+  }
+
 };
 
 int main( const int argc, const char *argv[] ) {

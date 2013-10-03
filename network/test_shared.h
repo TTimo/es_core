@@ -8,7 +8,6 @@
  */
 class SimpleRemotePeer : public RemotePeer {
 public:
-  virtual void DoTransport( SimpleRemotePeer &remote ) = 0;
   virtual void WriteFloat( float &_v ) = 0;
   virtual bool ReadFloat( float &_v ) = 0;
 };
