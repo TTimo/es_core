@@ -34,6 +34,7 @@ public:
 
 int main( const int argc, const char *argv[] ) {
   io_service io;
+  deadline_timer timer( io );
   if ( argc > 1 ) {
     // client
     try {
@@ -49,6 +50,7 @@ int main( const int argc, const char *argv[] ) {
       assert( endpoint_iterator == end );
       ip::tcp::socket socket( io );
       socket.connect( remote );
+      socket.non_blocking( true );
       printf( "Connected\n" );
 
       ScalarProxy p;
@@ -61,6 +63,8 @@ int main( const int argc, const char *argv[] ) {
       // NOTE: running till server socket closes on us
       // TODO: timing! have to add a tick speed
       while ( socket.is_open() ) {
+	timer.expires_from_now( boost::posix_time::milliseconds( 16 ) );
+	timer.wait();
 	client.Tick();
       }
 
@@ -88,6 +92,8 @@ int main( const int argc, const char *argv[] ) {
 
     unsigned int snapshot_accu = SNAPSHOT_FRAMES;
     while ( server.GetTime() < 30000 ) {
+      timer.expires_from_now( boost::posix_time::milliseconds( 16 ) );
+      timer.wait();
       snapshot_accu -= 1;
       server.Tick();
       if ( snapshot_accu <= 0 ) {

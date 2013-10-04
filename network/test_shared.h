@@ -58,6 +58,7 @@ public:
       return;
     }
     // new state received
+    printf( "ReadState\n" );
     s1 = s2;
     s2.v = _v;
     s2.t = t;
@@ -114,6 +115,7 @@ public:
     if ( o == nullptr ) {
       return;
     }
+    printf( "WriteState\n" );
     o->WriteState( *c );
   }
 
